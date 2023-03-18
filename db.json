@@ -1,9 +1,9 @@
 {
-    "posts": [
-        {
-            "id": 1,
-            "first_name": "json-server",
-            "last_name": "typicode"
-        }
-    ]
+  "posts": [
+    {
+      "id": 1,
+      "first_name": "json-server",
+      "last_name": "typicode"
+    }
+  ]
 }

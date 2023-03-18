@@ -8,9 +8,9 @@ export interface ConstructorArgsType<BaseUrl> {
   baseUrl?: BaseUrl;
   timeout?: number;
   options?: {
-    hasDefaultDto?: boolean,
-    exteraDto?: (data: any) => any
-  }
+    hasDefaultDto?: boolean;
+    exteraDto?: (data: any) => any;
+  };
   publicHeaders?: Record<string, string>;
 }
 
@@ -28,7 +28,7 @@ class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
     baseUrl,
     timeout,
     publicHeaders,
-    options
+    options,
   }: ConstructorArgsType<BaseUrl>) {
     this.baseUrl = baseUrl;
     this.options = options;
@@ -72,7 +72,13 @@ class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
         break;
     }
 
-    const finalData: ResponseType = this.options?.hasDefaultDto ? this.options.exteraDto ? this.options.exteraDto(defaultDto(response.data as ResponseType)) : defaultDto(response.data as ResponseType) : this.options?.exteraDto ? this.options?.exteraDto(response.data as ResponseType) : response.data as ResponseType;
+    const finalData: ResponseType = this.options?.hasDefaultDto
+      ? this.options.exteraDto
+        ? this.options.exteraDto(defaultDto(response.data as ResponseType))
+        : defaultDto(response.data as ResponseType)
+      : this.options?.exteraDto
+      ? this.options?.exteraDto(response.data as ResponseType)
+      : (response.data as ResponseType);
     return finalData;
   }
 }

@@ -12,8 +12,8 @@ function App() {
   });
   useEffect(() => {
     if (isLoading) return;
-    console.log(444, data)
-  }, [isLoading])
+    console.log(444, data);
+  }, [isLoading]);
   return <div className="App"></div>;
 }
 

@@ -1,7 +1,9 @@
-import { camelCase, forEach, isArray, isFunction } from "lodash";
+import _ from "lodash";
+
 import {
   CallBackArgsType,
   CreateAxiosQueryHookEntranceType,
+  DTONested,
   EndPointFunction,
   axiosQueryObjectType,
 } from "./hookCreatorType";
@@ -10,7 +12,7 @@ export const getFinalEndPoint = <T extends CreateAxiosQueryHookEntranceType>(
   endPoint: string | EndPointFunction<T["endPointArgs"]>,
   urlParams: Record<keyof T["endPointArgs"], string | number>
 ) => {
-  return isFunction(endPoint) ? (endPoint as Function)(urlParams) : endPoint;
+  return _.isFunction(endPoint) ? (endPoint as Function)(urlParams) : endPoint;
 };
 
 export const finalName = (
@@ -18,32 +20,32 @@ export const finalName = (
   queryParams?: CallBackArgsType["queryParams"],
   urlParams?: CallBackArgsType["urlParams"]
 ) =>
-  isFunction(name)
+  _.isFunction(name)
     ? (name as Function)({
-      ...queryParams,
-      ...urlParams,
-    })
+        ...queryParams,
+        ...urlParams,
+      })
     : name;
 
 export const finalQueryParams = (
   queryParams: axiosQueryObjectType["queryParams"],
   argQueryParams: CallBackArgsType["queryParams"]
-) => (isFunction(queryParams) ? (queryParams as Function)(argQueryParams) : queryParams);
+) =>
+  _.isFunction(queryParams)
+    ? (queryParams as Function)(argQueryParams)
+    : queryParams;
 
-export const defaultDto = (arrayData: Record<any, any>[] | Record<any, any> | any) => {
-  const obj: any = {}
-  if (isArray(arrayData)) {
-    arrayData.forEach((item) => {
-      for (const key in item) {
-        obj[camelCase(key)] = item[key]
-      }
-    });
-    return [obj]
-  } else {
-    let object: Record<any, any> = {};
-    Object.keys(arrayData).forEach((key) => {
-      object[camelCase(key)] = arrayData[key];
-    });
-    return object;
+export const defaultDto = <Data>(data: Data): DTONested<Data> => {
+  if (_.isArray(data)) {
+    return _.map(data, defaultDto) as DTONested<Data>;
   }
+
+  if (_.isObject(data)) {
+    return _(data)
+      .mapKeys((v, k) => _.camelCase(k))
+      .mapValues((v, k) => defaultDto(v))
+      .value() as DTONested<Data>;
+  }
+
+  return data as DTONested<Data>;
 };
