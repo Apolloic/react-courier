@@ -1,12 +1,13 @@
-import {AxiosQueryProviderPropsType} from "./Providers/AxiosQueryProvider";
+import { AxiosQueryProviderPropsType } from "./Providers/AxiosQueryProvider";
 
 export declare type ValueOf<T> = T[keyof T];
 export type AxiosQueryTypeHelper<T extends CreateAxiosQueryHookEntranceType> = T;
 export interface CreateAxiosQueryHookEntranceType {
   endPointArgs?: Record<string, number>;
-  responseData: Record<string, any>;
+  responseData: Array<Record<string, any>> | Record<string, string>;
   staticQueryParams?: Record<string, string | number>;
   dynamicQueryParams?: Record<string, string | number>;
+  responseDataAfterDto: Array<Record<string, any>> | Record<string, string>;
 }
 
 export type EndPointFunction<T> = (params: T) => string;
@@ -19,16 +20,16 @@ export type axiosQueryObjectType<
   T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType
 > = {
   name:
-    | ((
-        args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
-      ) => (string | number | boolean)[])
-    | string[];
+  | ((
+    args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
+  ) => (string | number | boolean)[])
+  | string[];
   baseUrl: keyof AxiosQueryProviderPropsType["otherBaseUrl"] | "default";
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   endPoint: EndPointFunction<T["endPointArgs"]> | string;
   queryParams?: QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>;
   requestData?: Record<string, any>;
-  dto?: Record<string, (data: any) => any>;
+  dto?: (data: T['responseData']) => T['responseDataAfterDto'];
   options?: {
     applyDefaultDto: boolean;
   };

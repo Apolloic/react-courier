@@ -1,17 +1,20 @@
-import {camelCase, isArray} from "lodash";
-import {createAxiosQueryHook} from "../lib/axiosQuery/hookCreator";
-import {AxiosQueryTypeHelper} from "../lib/axiosQuery/hookCreatorType";
+import { createAxiosQueryHook } from "../lib/axiosQuery/hookCreator";
+import { AxiosQueryTypeHelper } from "../lib/axiosQuery/hookCreatorType";
 
 type UsePostType = AxiosQueryTypeHelper<{
   endPointArgs: {
     postId: number;
   };
   responseData: {
-    body: string;
     id: number;
-    title: string;
-    userId: number;
-  };
+    first_name: string;
+    last_name: string;
+  }[];
+  responseDataAfterDto: {
+    firstName: string,
+    lastName: string,
+    id: number,
+  }[],
   dynamicQueryParams: {
     age: number;
   };
@@ -19,22 +22,13 @@ type UsePostType = AxiosQueryTypeHelper<{
 
 export const useGetAllPost = createAxiosQueryHook<UsePostType>({
   endPoint: () => "/posts",
-  name: ({age, postId}) => ["post", age, postId],
+  name: ({ age, postId }) => ["post", age, postId],
   method: "GET",
   baseUrl: "default",
   options: {
-    applyDefaultDto: true,
+    applyDefaultDto: true
   },
+  dto: (data) => {
+    return data
+  }
 });
-
-const arrayData = [
-  {
-    first_name: "Erfan",
-  },
-  {
-    lasy_name: "Erfan",
-  },
-  {
-    full_name: "Erfan",
-  },
-];

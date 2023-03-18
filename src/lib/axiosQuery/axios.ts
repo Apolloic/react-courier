@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
+import { defaultDto } from "./hookCreatorUtils";
 
 export type MultipleBaseUrlType = Record<string, string>;
 export type BaseUrlType = string | MultipleBaseUrlType;
@@ -6,6 +7,10 @@ export type BaseUrlType = string | MultipleBaseUrlType;
 export interface ConstructorArgsType<BaseUrl> {
   baseUrl?: BaseUrl;
   timeout?: number;
+  options?: {
+    hasDefaultDto?: boolean,
+    exteraDto?: (data: any) => any
+  }
   publicHeaders?: Record<string, string>;
 }
 
@@ -18,13 +23,15 @@ export interface RequestConfigType<D = any, Q = any>
 class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl;
   private agent: AxiosInstance;
-
+  public options: ConstructorArgsType<BaseUrl>["options"];
   constructor({
     baseUrl,
     timeout,
     publicHeaders,
+    options
   }: ConstructorArgsType<BaseUrl>) {
     this.baseUrl = baseUrl;
+    this.options = options;
     this.agent = axios.create({
       baseURL: typeof baseUrl === "string" ? baseUrl : undefined,
       headers: {
@@ -65,7 +72,7 @@ class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
         break;
     }
 
-    const finalData: ResponseType = response.data;
+    const finalData: ResponseType = this.options?.hasDefaultDto ? this.options.exteraDto ? this.options.exteraDto(defaultDto(response.data as ResponseType)) : defaultDto(response.data as ResponseType) : this.options?.exteraDto ? this.options?.exteraDto(response.data as ResponseType) : response.data as ResponseType;
     return finalData;
   }
 }

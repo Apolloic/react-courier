@@ -1,4 +1,4 @@
-import {camelCase, isArray, isFunction} from "lodash";
+import { camelCase, forEach, isArray, isFunction } from "lodash";
 import {
   CallBackArgsType,
   CreateAxiosQueryHookEntranceType,
@@ -20,9 +20,9 @@ export const finalName = (
 ) =>
   isFunction(name)
     ? (name as Function)({
-        ...queryParams,
-        ...urlParams,
-      })
+      ...queryParams,
+      ...urlParams,
+    })
     : name;
 
 export const finalQueryParams = (
@@ -30,13 +30,15 @@ export const finalQueryParams = (
   argQueryParams: CallBackArgsType["queryParams"]
 ) => (isFunction(queryParams) ? (queryParams as Function)(argQueryParams) : queryParams);
 
-export const defaultDto = (arrayData: Record<any, any>[] | Record<any, any>) => {
+export const defaultDto = (arrayData: Record<any, any>[] | Record<any, any> | any) => {
+  const obj: any = {}
   if (isArray(arrayData)) {
-    return arrayData.map((item) => {
-      return {
-        [camelCase(Object.keys(item)[0])]: Object.values(item)[0],
-      };
+    arrayData.forEach((item) => {
+      for (const key in item) {
+        obj[camelCase(key)] = item[key]
+      }
     });
+    return [obj]
   } else {
     let object: Record<any, any> = {};
     Object.keys(arrayData).forEach((key) => {
@@ -45,4 +47,3 @@ export const defaultDto = (arrayData: Record<any, any>[] | Record<any, any>) => 
     return object;
   }
 };
-+
