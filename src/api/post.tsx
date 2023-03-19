@@ -1,7 +1,8 @@
 import {createAxiosQueryHook} from "../lib/axiosQuery/hookCreator";
-import {AxiosQueryTypeHelper} from "../lib/axiosQuery/hookCreatorType";
+import {AQHookTypeHelper, AQMethodTypeHelper} from "../lib/axiosQuery/hookCreatorType";
 
-type UsePostType = AxiosQueryTypeHelper<{
+type UsePostType = AQHookTypeHelper<{
+  method: AQMethodTypeHelper<"POST">;
   endPointArgs: {
     postId: number;
   };
@@ -10,30 +11,29 @@ type UsePostType = AxiosQueryTypeHelper<{
     first_name: string;
     last_name: string;
   }[];
-  responseDataAfterDto: {
-    firstName: string;
-    lastName: string;
-    id: number;
-  }[];
   dynamicQueryParams: {
     age: number;
   };
   applyDefaultDto: true;
+  dynamicRequestData: {
+    name: string;
+  };
+  staticRequestData: {
+    userId: 100;
+    id: 100;
+    title: "test";
+    body: "test Body";
+  };
 }>;
 
-export const useGetAllPost =
-  createAxiosQueryHook<UsePostType>({
-    endPoint: () => "/posts",
-    name: ({age, postId}) => ["post", age, postId],
-    method: "GET",
-    options: {
-      applyDefaultDto: true,
-    },
-    dto(data) {
-      return data.map((item) => ({
-        firstName: item.firstName,
-        id: item.id,
-        lastName: item.lastName,
-      }));
-    },
-  });
+export const usePOSTAllPost = createAxiosQueryHook<UsePostType>({
+  endPoint: () => "/posts",
+  name: ({age, postId}) => ["post", age, postId],
+  method: "POST",
+  requestData: {
+    userId: 100,
+    id: 100,
+    title: "test",
+    body: "test Body",
+  },
+});
