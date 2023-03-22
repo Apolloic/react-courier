@@ -1,8 +1,9 @@
-import { createAxiosQueryHook } from "../lib/axiosQuery/hookCreator";
-import { AQHookTypeHelper } from "../lib/axiosQuery/hookCreatorType";
-import { toast } from "react-toastify";
+import {CreateApi} from "../lib/axiosQuery";
+import {AQHookTypeHelper, AQMethodTypeHelper} from "../lib/axiosQuery/types";
+import {toast} from "react-toastify";
+
 type UsePostType = AQHookTypeHelper<{
-  method: "GET";
+  method: AQMethodTypeHelper<"GET">;
   endPointArgs: {
     postId: number;
   };
@@ -17,9 +18,9 @@ type UsePostType = AQHookTypeHelper<{
   applyDefaultDto: true;
 }>;
 
-export const useGETAllPost = createAxiosQueryHook<UsePostType>({
+export const useGETAllPost = CreateApi<UsePostType>({
   endPoint: () => "/posts22",
-  name: ({ age, postId }) => ["post", age, postId],
+  name: ({age, postId}) => ["post", age, postId],
   method: "GET",
   timeout: 2000,
   options: {

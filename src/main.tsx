@@ -1,23 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import AxiosQueryProvider from "./lib/axiosQuery/Providers/AxiosQueryProvider";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
+import {AxiosQueryProvider} from "./lib/axiosQuery";
 
 declare module "./lib/axiosQuery" {
   type RegisterErrorDto = {
-    isSucess: false,
-    message: string
-  }
-  type RegisterDto = {
-
-  }
-  type RegisterOtherBaseUrlsKeys = ["test"]
+    isSucess: false;
+    message: string;
+  };
+  type RegisterOtherBaseUrlsKeys = ["test", "mamad"];
 }
-
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -27,8 +21,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         errorDto: (error) => {
           return {
             isSucess: false,
-            message: error.message
-          }
+            message: error.message,
+          };
         },
         queries: {
           refetchOnMount: false,
@@ -39,13 +33,12 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           },
         },
         mutations: {
-          onError(error, variables, context) {
-
-          },
-        }
+          onError(error, variables, context) {},
+        },
       }}
       otherBaseUrl={{
-        test: 'erfan'
+        mamad: "salam",
+        test: "erfan",
       }}
     >
       <App />

@@ -6,7 +6,7 @@ import {
   DTONested,
   EndPointFunction,
   axiosQueryObjectType,
-} from "./hookCreatorType";
+} from "../types";
 
 export const getFinalEndPoint = <T extends CreateAxiosQueryHookEntranceType>(
   endPoint: string | EndPointFunction<T["endPointArgs"]>,
@@ -31,9 +31,7 @@ export const finalQueryParams = (
   queryParams: axiosQueryObjectType["queryParams"],
   argQueryParams: CallBackArgsType["queryParams"]
 ) =>
-  _.isFunction(queryParams)
-    ? (queryParams as Function)(argQueryParams)
-    : queryParams;
+  _.isFunction(queryParams) ? (queryParams as Function)(argQueryParams) : queryParams;
 
 export const defaultDto = <Data>(data: Data): DTONested<Data> => {
   if (_.isArray(data)) {

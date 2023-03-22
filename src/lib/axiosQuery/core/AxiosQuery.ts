@@ -1,25 +1,8 @@
 import axios, {AxiosInstance, AxiosResponse, AxiosRequestConfig} from "axios";
-import {defaultDto} from "./hookCreatorUtils";
+import {defaultDto} from "../utils";
+import {BaseUrlType, ConstructorArgsType, RequestConfigType} from "../types";
 
-export type MultipleBaseUrlType = Record<string, string>;
-export type BaseUrlType = string | MultipleBaseUrlType;
-
-export interface ConstructorArgsType<BaseUrl> {
-  baseUrl?: BaseUrl;
-  timeout: number;
-  options?: {
-    hasDefaultDto?: boolean;
-    exteraDto?: (data: any) => any;
-  };
-  publicHeaders?: Record<string, string>;
-}
-
-export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig {
-  data?: D;
-  queryParams?: Q;
-}
-
-class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
+export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl;
   private agent: AxiosInstance;
   public options: ConstructorArgsType<BaseUrl>["options"];
@@ -32,7 +15,7 @@ class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
         "Content-Type": "application/json",
         ...publicHeaders,
       },
-      timeout: 1000,
+      timeout: timeout * 1000,
     });
   }
 
@@ -62,18 +45,20 @@ class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
           });
           break;
       }
-      const finalData: ResponseType = this.options?.hasDefaultDto
-        ? this.options.exteraDto
-          ? this.options.exteraDto(defaultDto(response.data as ResponseType))
-          : defaultDto(response.data as ResponseType)
-        : this.options?.exteraDto
-        ? this.options?.exteraDto(response.data as ResponseType)
-        : (response.data as ResponseType);
-      return finalData;
+
+      if (this.options?.hasDefaultDto) {
+        if (this.options?.exteraDto) {
+          return this.options?.exteraDto(defaultDto(response.data as ResponseType));
+        } else {
+          return defaultDto(response.data as ResponseType);
+        }
+      } else {
+        return response.data as ResponseType;
+      }
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(
+        this.options?.commonErrorDto ? this.options?.commonErrorDto(error) : error
+      );
     }
   }
 }
-
-export default AxiosQuery;
