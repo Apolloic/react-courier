@@ -1,20 +1,16 @@
 import {PropsWithChildren} from "react";
-import {
-  QueryClientProvider,
-  QueryClient,
-  QueryClientConfig,
-} from "@tanstack/react-query";
+import {QueryClientProvider, QueryClient, DefaultOptions} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import AxiosQueryContextProvider from "./AxiosQueryContext";
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
 
-export interface AxiosQueryProviderPropsType<
-  T extends string
-> extends PropsWithChildren {
+export interface AxiosQueryProviderPropsType<T extends string> extends PropsWithChildren {
   defaultBaseUrl: string;
   otherBaseUrl: Record<Unpacked<T>, string>;
-  defaultOptions?: QueryClientConfig["defaultOptions"];
+  defaultOptions?: DefaultOptions<any>;
+  headers?: Record<string, string>;
+  timeout?: number;
 }
 
 const queryClient = new QueryClient();
@@ -24,10 +20,14 @@ const AxiosQueryProvider = <T extends string>({
   defaultBaseUrl,
   otherBaseUrl,
   defaultOptions,
+  timeout,
+  headers,
 }: AxiosQueryProviderPropsType<T>) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AxiosQueryContextProvider
+        timeout={timeout ?? 5}
+        headers={headers ?? {}}
         defaultBaseUrl={defaultBaseUrl}
         otherBaseUrl={otherBaseUrl}
         defaultOptions={defaultOptions}

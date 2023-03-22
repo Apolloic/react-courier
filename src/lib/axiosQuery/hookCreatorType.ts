@@ -47,9 +47,11 @@ export type axiosQueryObjectType<
   endPoint: EndPointFunction<T["endPointArgs"]> | string;
   queryParams?: QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>;
 
-  options?: UseQueryOptions<T["responseDataAfterDto"]> & {
-    applyDefaultDto: boolean;
+  options?: UseQueryOptions<T["responseDataAfterDto"], any> & {
+    applyDefaultDto?: boolean;
   };
+  headers?: Record<string, string>;
+  timeout?: number;
   dto?: (
     data: T["applyDefaultDto"] extends true
       ? DTONested<T["responseData"]>

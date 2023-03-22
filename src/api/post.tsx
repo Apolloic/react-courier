@@ -1,8 +1,9 @@
 import {createAxiosQueryHook} from "../lib/axiosQuery/hookCreator";
-import {AQHookTypeHelper, AQMethodTypeHelper} from "../lib/axiosQuery/hookCreatorType";
-
+import {AQHookTypeHelper} from "../lib/axiosQuery/hookCreatorType";
+import {toast} from "react-toastify";
+// Query or Mutation
 type UsePostType = AQHookTypeHelper<{
-  method: AQMethodTypeHelper<"POST">;
+  method: "GET";
   endPointArgs: {
     postId: number;
   };
@@ -15,25 +16,16 @@ type UsePostType = AQHookTypeHelper<{
     age: number;
   };
   applyDefaultDto: true;
-  dynamicRequestData: {
-    name: string;
-  };
-  staticRequestData: {
-    userId: 100;
-    id: 100;
-    title: "test";
-    body: "test Body";
-  };
 }>;
 
-export const usePOSTAllPost = createAxiosQueryHook<UsePostType>({
-  endPoint: () => "/posts",
+export const useGETAllPost = createAxiosQueryHook<UsePostType>({
+  endPoint: () => "/posts22",
   name: ({age, postId}) => ["post", age, postId],
-  method: "POST",
-  requestData: {
-    userId: 100,
-    id: 100,
-    title: "test",
-    body: "test Body",
+  method: "GET",
+  timeout: 2000,
+  options: {
+    onError: (error) => {
+      toast(error.message);
+    },
   },
 });

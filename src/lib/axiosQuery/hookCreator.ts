@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import {
   UseMutationResult,
   UseQueryResult,
@@ -17,19 +19,30 @@ import {
 import {finalName, finalQueryParams, getFinalEndPoint} from "./hookCreatorUtils";
 import {AxiosQueryContext} from "./Providers/AxiosQueryContext";
 
+type QueryKeyType<T extends CreateAxiosQueryHookEntranceType> = {
+  queryParams: T["dynamicQueryParams"];
+  urlParams: T["endPointArgs"];
+};
+
 export const createAxiosQueryHook = <T extends CreateAxiosQueryHookEntranceType>(
   axiosQueryObject: axiosQueryObjectType<T>
 ) => {
-  return (args?: CallBackArgsType<T>) => {
-    const baseUrls = useContext(AxiosQueryContext);
-
+  const useCustom = (args?: CallBackArgsType<T>) => {
+    const {
+      defaultBaseUrl,
+      otherBaseUrl,
+      headers: commonHeaders,
+      timeout: commonTimeout,
+    } = useContext(AxiosQueryContext);
     const axiosQuery = new AxiosQuery({
+      timeout: axiosQueryObject.timeout ? axiosQueryObject.timeout : commonTimeout,
+      publicHeaders: {...commonHeaders, ...axiosQueryObject.headers},
       baseUrl: axiosQueryObject.baseUrl
-        ? baseUrls[axiosQueryObject.baseUrl]
-        : baseUrls["default"],
+        ? otherBaseUrl[axiosQueryObject.baseUrl]
+        : defaultBaseUrl,
       options: {
         exteraDto: axiosQueryObject.dto,
-        hasDefaultDto: axiosQueryObject?.options?.applyDefaultDto,
+        hasDefaultDto: axiosQueryObject?.options?.applyDefaultDto ?? false,
       },
     });
 
@@ -71,8 +84,12 @@ export const createAxiosQueryHook = <T extends CreateAxiosQueryHookEntranceType>
         axiosQueryObject?.options
       );
     }
-    return result as axiosQueryObjectType["method"] extends "GET"
-      ? UseQueryResult<FinalResponseData<T>>
-      : UseMutationResult<FinalResponseData<T>, unknown, T["dynamicRequestData"]>;
+
+    return result as T["method"] extends "GET"
+      ? UseQueryResult<FinalResponseData<T>, any>
+      : UseMutationResult<FinalResponseData<T>, any, T["dynamicRequestData"]>;
   };
+  useCustom.getQueryKey = (args: QueryKeyType<T>) =>
+    finalName(axiosQueryObject.name, args?.queryParams, args?.urlParams);
+  return useCustom;
 };
