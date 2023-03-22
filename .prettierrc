@@ -1,6 +1,5 @@
 {
   "arrowParens": "always",
   "bracketSpacing": false,
-  "printWidth": 90,
-  "singleAttributePerLine": false
+  "printWidth": 90
 }
