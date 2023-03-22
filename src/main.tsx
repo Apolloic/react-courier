@@ -6,11 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {AxiosQueryProvider} from "./lib/axiosQuery";
 
 declare module "./lib/axiosQuery" {
-  type RegisterErrorDto = {
-    isSucess: false;
-    message: string;
-  };
-  type RegisterOtherBaseUrlsKeys = ["test", "mamad"];
+  interface RegisterErrorDto {}
+  interface RegisterOtherBaseUrls {}
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -37,8 +34,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         },
       }}
       otherBaseUrl={{
-        mamad: "salam",
-        test: "erfan",
+        test: "salam",
+        test2: "mamad",
       }}
     >
       <App />

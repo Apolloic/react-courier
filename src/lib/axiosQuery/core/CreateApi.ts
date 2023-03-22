@@ -12,7 +12,6 @@ import {
   FinalResponseData,
   QueryKeyType,
   QueryParamsType,
-  RegisterErrorDtoType,
   RequestConfigType,
   RequestType,
   axiosQueryObjectType,
@@ -20,6 +19,7 @@ import {
 import {finalName, finalQueryParams, getFinalEndPoint} from "../utils";
 import {AxiosQueryContext} from "../Providers";
 import {AxiosQuery} from "./AxiosQuery";
+import {RegisterErrorDto} from "..";
 
 export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
   axiosQueryObject: axiosQueryObjectType<T>
@@ -32,7 +32,9 @@ export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
       timeout: axiosQueryObject.timeout ? axiosQueryObject.timeout : timeout ?? 5,
       publicHeaders: {...headers, ...axiosQueryObject.headers},
       baseUrl: axiosQueryObject.baseUrl
-        ? (otherBaseUrl as any)?.[axiosQueryObject.baseUrl]
+        ? axiosQueryObject.baseUrl !== "default"
+          ? otherBaseUrl?.[axiosQueryObject.baseUrl]
+          : defaultBaseUrl
         : defaultBaseUrl,
       options: {
         commonErrorDto: commonErrorDto,
@@ -81,10 +83,10 @@ export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
     }
 
     return result as T["method"] extends "GET"
-      ? UseQueryResult<FinalResponseData<T>, RegisterErrorDtoType>
+      ? UseQueryResult<FinalResponseData<T>, RegisterErrorDto>
       : UseMutationResult<
           FinalResponseData<T>,
-          RegisterErrorDtoType,
+          RegisterErrorDto,
           T["dynamicRequestData"]
         >;
   };

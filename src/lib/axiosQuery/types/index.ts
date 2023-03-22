@@ -1,7 +1,7 @@
 import {DefaultOptions, UseQueryOptions} from "@tanstack/react-query";
 import {PropsWithChildren} from "react";
 import {AxiosRequestConfig} from "axios";
-import {RegisterErrorDto, RegisterOtherBaseUrlsKeys} from "..";
+import {RegisterErrorDto, RegisterOtherBaseUrls} from "..";
 
 export declare type DTO<S extends string> = S extends `${infer T}_${infer U}`
   ? `${T}${Capitalize<DTO<U>>}`
@@ -53,11 +53,11 @@ export type axiosQueryObjectType<
         args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
       ) => (string | number | boolean)[])
     | string[];
-  baseUrl?: "default" | Unpacked<RegisterOtherBaseUrlsKeysType>;
+  baseUrl?: keyof RegisterOtherBaseUrls | "default";
   method: T["method"];
   endPoint: EndPointFunction<T["endPointArgs"]> | string;
   queryParams?: QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>;
-  options?: UseQueryOptions<T["responseDataAfterDto"], RegisterErrorDtoType> & {
+  options?: UseQueryOptions<T["responseDataAfterDto"], RegisterErrorDto> & {
     applyDefaultDto?: boolean;
   };
   headers?: Record<string, string>;
@@ -89,11 +89,11 @@ export type FinalResponseData<T extends CreateAxiosQueryHookEntranceType> =
 
 export interface AxiosQueryProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string;
-  otherBaseUrl?: Record<Unpacked<RegisterOtherBaseUrlsKeysType>, string>;
-  defaultOptions?: DefaultOptions<RegisterErrorDtoType> & {
+  otherBaseUrl?: Record<keyof RegisterOtherBaseUrls, string>;
+  defaultOptions?: DefaultOptions<RegisterErrorDto> & {
     timeout?: number;
     headers?: Record<string, string>;
-    errorDto?: (error: any) => RegisterErrorDtoType;
+    errorDto?: (error: any) => RegisterErrorDto;
   };
 }
 
@@ -102,7 +102,7 @@ export type ContextType = {
   otherBaseUrl?: AxiosQueryProviderPropsType["otherBaseUrl"];
   headers?: Record<string, string>;
   timeout?: number;
-  commonErrorDto?: (error: any) => RegisterErrorDtoType;
+  commonErrorDto?: (error: any) => RegisterErrorDto;
 };
 
 export type MultipleBaseUrlType = Record<string, string>;
@@ -113,7 +113,7 @@ export interface ConstructorArgsType<BaseUrl> {
   timeout: number;
   options?: {
     hasDefaultDto?: boolean;
-    commonErrorDto?: (error: any) => RegisterErrorDtoType;
+    commonErrorDto?: (error: any) => RegisterErrorDto;
     exteraDto?: (data: any) => any;
   };
   publicHeaders?: Record<string, string>;
@@ -123,5 +123,3 @@ export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig 
   data?: D;
   queryParams?: Q;
 }
-export type RegisterErrorDtoType = RegisterErrorDto;
-export type RegisterOtherBaseUrlsKeysType = RegisterOtherBaseUrlsKeys;

@@ -22,10 +22,11 @@ export const useGETAllPost = CreateApi<UsePostType>({
   endPoint: () => "/posts22",
   name: ({age, postId}) => ["post", age, postId],
   method: "GET",
+  baseUrl: "default",
   timeout: 2000,
   options: {
     onError: (error) => {
-      toast(error.message);
+      console.log(error);
     },
   },
 });
