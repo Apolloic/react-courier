@@ -1,41 +1,35 @@
-import {PropsWithChildren} from "react";
-import {QueryClientProvider, QueryClient, DefaultOptions} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-import AxiosQueryContextProvider from "./AxiosQueryContext";
+import { FunctionComponent, PropsWithChildren } from "react";
+import { QueryClientProvider, QueryClient, DefaultOptions } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import AxiosQueryContextProvider from "./AxiosQueryContextProvider";
+import { RegisterErrorDto } from "..";
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
 
-export interface AxiosQueryProviderPropsType<T extends string> extends PropsWithChildren {
+export interface AxiosQueryProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string;
-  otherBaseUrl: Record<Unpacked<T>, string>;
-  defaultOptions?: DefaultOptions<any>;
-  headers?: Record<string, string>;
-  timeout?: number;
+  otherBaseUrl?: Record<string, string>;
+  defaultOptions?: DefaultOptions<RegisterErrorDto> & {
+    timeout?: number;
+    headers?: Record<string, string>;
+    errorDto?: (error: any) => RegisterErrorDto;
+  };
 }
 
 const queryClient = new QueryClient();
 
-const AxiosQueryProvider = <T extends string>({
-  children,
-  defaultBaseUrl,
-  otherBaseUrl,
-  defaultOptions,
-  timeout,
-  headers,
-}: AxiosQueryProviderPropsType<T>) => {
+function AxiosQueryProvider(props: AxiosQueryProviderPropsType) {
   return (
     <QueryClientProvider client={queryClient}>
       <AxiosQueryContextProvider
-        timeout={timeout ?? 5}
-        headers={headers ?? {}}
-        defaultBaseUrl={defaultBaseUrl}
-        otherBaseUrl={otherBaseUrl}
-        defaultOptions={defaultOptions}
+        otherBaseUrl={props.otherBaseUrl}
+        defaultOptions={props.defaultOptions}
+        defaultBaseUrl={props.defaultBaseUrl}
       >
-        {children}
+        {props.children}
       </AxiosQueryContextProvider>
       <ReactQueryDevtools />
-    </QueryClientProvider>
+    </QueryClientProvider >
   );
 };
 

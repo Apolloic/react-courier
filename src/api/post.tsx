@@ -1,7 +1,6 @@
-import {createAxiosQueryHook} from "../lib/axiosQuery/hookCreator";
-import {AQHookTypeHelper} from "../lib/axiosQuery/hookCreatorType";
-import {toast} from "react-toastify";
-// Query or Mutation
+import { createAxiosQueryHook } from "../lib/axiosQuery/hookCreator";
+import { AQHookTypeHelper } from "../lib/axiosQuery/hookCreatorType";
+import { toast } from "react-toastify";
 type UsePostType = AQHookTypeHelper<{
   method: "GET";
   endPointArgs: {
@@ -20,7 +19,7 @@ type UsePostType = AQHookTypeHelper<{
 
 export const useGETAllPost = createAxiosQueryHook<UsePostType>({
   endPoint: () => "/posts22",
-  name: ({age, postId}) => ["post", age, postId],
+  name: ({ age, postId }) => ["post", age, postId],
   method: "GET",
   timeout: 2000,
   options: {

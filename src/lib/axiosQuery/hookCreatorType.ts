@@ -1,4 +1,6 @@
-import {UseQueryOptions} from "@tanstack/react-query";
+import { UseQueryOptions } from "@tanstack/react-query";
+import { RegisterErrorDtoType, RegisterOtherBaseUrlsKeysType } from ".";
+import { Unpacked } from "./Providers/AxiosQueryProvider";
 
 export declare type DTO<S extends string> = S extends `${infer T}_${infer U}`
   ? `${T}${Capitalize<DTO<U>>}`
@@ -8,8 +10,8 @@ export declare type DTONested<T> = T extends Array<any>
   ? Array<DTONested<T[number]>>
   : T extends object
   ? {
-      [K in keyof T as DTO<K & string>]: DTONested<T[K]>;
-    }
+    [K in keyof T as DTO<K & string>]: DTONested<T[K]>;
+  }
   : T;
 
 export declare type ValueOf<T> = T[keyof T];
@@ -38,16 +40,15 @@ export type axiosQueryObjectType<
   T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType
 > = {
   name:
-    | ((
-        args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
-      ) => (string | number | boolean)[])
-    | string[];
-  baseUrl?: "default" | any;
+  | ((
+    args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
+  ) => (string | number | boolean)[])
+  | string[];
+  baseUrl?: "default" | Unpacked<RegisterOtherBaseUrlsKeysType>;
   method: T["method"];
   endPoint: EndPointFunction<T["endPointArgs"]> | string;
   queryParams?: QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>;
-
-  options?: UseQueryOptions<T["responseDataAfterDto"], any> & {
+  options?: UseQueryOptions<T["responseDataAfterDto"], RegisterErrorDtoType> & {
     applyDefaultDto?: boolean;
   };
   headers?: Record<string, string>;
@@ -57,7 +58,7 @@ export type axiosQueryObjectType<
       ? DTONested<T["responseData"]>
       : T["responseData"]
   ) => T["responseDataAfterDto"];
-} & (T["method"] extends "GET" ? {} : {requestData: T["staticRequestData"]});
+} & (T["method"] extends "GET" ? {} : { requestData: T["staticRequestData"] });
 
 export type CallBackArgsType<
   T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType
@@ -69,10 +70,10 @@ export type CallBackArgsType<
 
 export type RequestType<T extends CreateAxiosQueryHookEntranceType> =
   T["dynamicQueryParams"] extends Record<any, any>
-    ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
-    : T["staticQueryParams"];
+  ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
+  : T["staticQueryParams"];
 
 export type FinalResponseData<T extends CreateAxiosQueryHookEntranceType> =
   T["responseDataAfterDto"] extends unknown
-    ? T["responseData"]
-    : T["responseDataAfterDto"];
+  ? T["responseData"]
+  : T["responseDataAfterDto"];
