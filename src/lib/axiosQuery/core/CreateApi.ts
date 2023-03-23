@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {useContext} from "react";
+import { useContext } from "react";
 import {
   UseMutationResult,
   UseQueryResult,
@@ -16,21 +16,21 @@ import {
   RequestType,
   axiosQueryObjectType,
 } from "../types";
-import {finalName, finalQueryParams, getFinalEndPoint} from "../utils";
-import {AxiosQueryContext} from "../Providers";
-import {AxiosQuery} from "./AxiosQuery";
-import {RegisterErrorDto} from "..";
+import { finalName, finalQueryParams, getFinalEndPoint } from "../utils";
+import { AxiosQueryContext } from "../Providers";
+import { AxiosQuery } from "./AxiosQuery";
+import { RegisterErrorDto } from "..";
 
 export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
   axiosQueryObject: axiosQueryObjectType<T>
 ) => {
   const useCustom = (args?: CallBackArgsType<T>) => {
-    const {defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout} =
+    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout } =
       useContext(AxiosQueryContext);
 
     const axiosQuery = new AxiosQuery({
       timeout: axiosQueryObject.timeout ? axiosQueryObject.timeout : timeout ?? 5,
-      publicHeaders: {...headers, ...axiosQueryObject.headers},
+      publicHeaders: { ...headers, ...axiosQueryObject.headers },
       baseUrl: axiosQueryObject.baseUrl
         ? axiosQueryObject.baseUrl !== "default"
           ? otherBaseUrl?.[axiosQueryObject.baseUrl]
@@ -47,8 +47,8 @@ export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
     const configs: RequestConfigType<
       T["responseDataAfterDto"],
       T["dynamicQueryParams"] extends Record<any, any>
-        ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
-        : T["staticQueryParams"]
+      ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
+      : T["staticQueryParams"]
     > = {
       method: axiosQueryObject.method,
       queryParams: axiosQueryObject.queryParams
@@ -63,7 +63,7 @@ export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
         async (data: any) => {
           return axiosQuery.request<T["responseDataAfterDto"], RequestType<T>>(endPoint, {
             method: axiosQueryObject.method,
-            data: {...(axiosQueryObject as axiosQueryObjectType).requestData, ...data},
+            data: { ...(axiosQueryObject as axiosQueryObjectType).requestData, ...data },
             ...configs,
           });
         }
@@ -78,17 +78,17 @@ export const CreateApi = <T extends CreateAxiosQueryHookEntranceType>(
           );
           return data;
         },
-        axiosQueryObject?.options
+        { ...axiosQueryObject?.options, ...args?.options }
       );
     }
 
     return result as T["method"] extends "GET"
       ? UseQueryResult<FinalResponseData<T>, RegisterErrorDto>
       : UseMutationResult<
-          FinalResponseData<T>,
-          RegisterErrorDto,
-          T["dynamicRequestData"]
-        >;
+        FinalResponseData<T>,
+        RegisterErrorDto,
+        T["dynamicRequestData"]
+      >;
   };
   useCustom.getQueryKey = (args: QueryKeyType<T>) =>
     finalName(axiosQueryObject.name, args?.queryParams, args?.urlParams);

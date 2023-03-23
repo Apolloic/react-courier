@@ -1,9 +1,9 @@
-import {useEffect} from "react";
-import {useGETAllPost} from "./api/post";
-import {useAxiosQueryClient} from "./lib/axiosQuery/hooks";
+import { useEffect } from "react";
+import { useGETAllPost } from "./api/post";
+import { useAxiosQueryClient } from "./lib/axiosQuery/hooks";
 
 function App() {
-  const {isError, data, isLoading, error} = useGETAllPost({
+  const { isError, data, isLoading, error } = useGETAllPost({
     queryParams: {
       age: 22,
     },

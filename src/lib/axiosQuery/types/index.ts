@@ -1,7 +1,7 @@
-import {DefaultOptions, UseQueryOptions} from "@tanstack/react-query";
-import {PropsWithChildren} from "react";
-import {AxiosRequestConfig} from "axios";
-import {RegisterErrorDto, RegisterOtherBaseUrls} from "..";
+import { DefaultOptions, UseQueryOptions } from "@tanstack/react-query";
+import { PropsWithChildren } from "react";
+import { AxiosRequestConfig } from "axios";
+import { RegisterErrorDto, RegisterOtherBaseUrls } from "..";
 
 export declare type DTO<S extends string> = S extends `${infer T}_${infer U}`
   ? `${T}${Capitalize<DTO<U>>}`
@@ -18,8 +18,8 @@ export declare type DTONested<T> = T extends Array<any>
   ? Array<DTONested<T[number]>>
   : T extends object
   ? {
-      [K in keyof T as DTO<K & string>]: DTONested<T[K]>;
-    }
+    [K in keyof T as DTO<K & string>]: DTONested<T[K]>;
+  }
   : T;
 
 export declare type ValueOf<T> = T[keyof T];
@@ -49,10 +49,10 @@ export type axiosQueryObjectType<
   T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType
 > = {
   name:
-    | ((
-        args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
-      ) => (string | number | boolean)[])
-    | string[];
+  | ((
+    args: T["endPointArgs"] & T["dynamicQueryParams"] & T["staticQueryParams"]
+  ) => (string | number | boolean)[])
+  | string[];
   baseUrl?: keyof RegisterOtherBaseUrls | "default";
   method: T["method"];
   endPoint: EndPointFunction<T["endPointArgs"]> | string;
@@ -67,7 +67,7 @@ export type axiosQueryObjectType<
       ? DTONested<T["responseData"]>
       : T["responseData"]
   ) => T["responseDataAfterDto"];
-} & (T["method"] extends "GET" ? {} : {requestData: T["staticRequestData"]});
+} & (T["method"] extends "GET" ? {} : { requestData: T["staticRequestData"] });
 
 export type CallBackArgsType<
   T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType
@@ -75,17 +75,18 @@ export type CallBackArgsType<
   urlParams: Record<keyof T["endPointArgs"], string | number>;
   queryParams: T["dynamicQueryParams"];
   requestData?: Record<string, any>;
+  options?: UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>
 };
 
 export type RequestType<T extends CreateAxiosQueryHookEntranceType> =
   T["dynamicQueryParams"] extends Record<any, any>
-    ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
-    : T["staticQueryParams"];
+  ? ReturnType<QueryParamsType<T["staticQueryParams"], T["dynamicQueryParams"]>>
+  : T["staticQueryParams"];
 
 export type FinalResponseData<T extends CreateAxiosQueryHookEntranceType> =
   T["responseDataAfterDto"] extends unknown
-    ? T["responseData"]
-    : T["responseDataAfterDto"];
+  ? T["responseData"]
+  : T["responseDataAfterDto"];
 
 export interface AxiosQueryProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string;
