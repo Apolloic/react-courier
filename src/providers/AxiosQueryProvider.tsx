@@ -1,9 +1,8 @@
-import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-import AxiosQueryContextProvider from "./AxiosQueryContextProvider";
-import {AxiosQueryProviderPropsType} from "../types";
-
-const queryClient = new QueryClient();
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import AxiosQueryContextProvider from './AxiosQueryContextProvider'
+import { AxiosQueryProviderPropsType } from '../types'
+import React from 'react'
+const queryClient = new QueryClient()
 
 export function AxiosQueryProvider(props: AxiosQueryProviderPropsType) {
   return (
@@ -15,7 +14,6 @@ export function AxiosQueryProvider(props: AxiosQueryProviderPropsType) {
       >
         {props.children}
       </AxiosQueryContextProvider>
-      <ReactQueryDevtools />
     </QueryClientProvider>
-  );
+  )
 }
