@@ -12,7 +12,7 @@
     "prepublishOnly": "npm run prettier && npm run lint",
     "prepare": "npm run build",
     "lint": "eslint \"{**/*,*}.{js,ts,jsx,tsx}\"",
-    "format": "prettier --write \"{src,tests,example/src}/**/*.{js,ts,jsx,tsx}\""
+    "prettier": "prettier --write \"{src,tests,example/src}/**/*.{js,ts,jsx,tsx}\""
   },
   "repository": {
     "type": "git",
