@@ -1,7 +1,7 @@
 import React from 'react'
 import { DefaultOptions, useQueryClient } from '@tanstack/react-query'
 import { createContext, useMemo } from 'react'
-import { RHookProviderPropsType, ContextType } from '../types'
+import { RHookProviderPropsType, ContextType } from '../types/types'
 export const RestHookContext = createContext<ContextType>({})
 
 function RestHookContextProvider({ defaultBaseUrl, otherBaseUrl, defaultOptions, children }: RHookProviderPropsType) {

@@ -10,7 +10,7 @@ import {
   RequestConfigType,
   RequestType,
   RHookObjectType,
-} from '../types'
+} from '../types/types'
 import { finalName, finalQueryParams, getFinalEndPoint } from '../utils'
 import { AxiosQuery } from './AxiosQuery'
 import { RegisterErrorDto } from '..'

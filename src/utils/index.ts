@@ -7,7 +7,7 @@ import {
   EndPointFunction,
   FunctionType,
   RHookObjectType,
-} from '../types'
+} from '../types/types'
 
 export const getFinalEndPoint = <T extends CreateRestHookEntranceType>(
   endPoint: string | EndPointFunction<T['endPointArgs']>,
