@@ -2,8 +2,9 @@
   "name": "rest-hook",
   "version": "0.2.9",
   "description": "Composition of React query and Axios, the simple and powerful API call",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.js",
   "module": "dist/esm/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --legacy-output",
     "lint": "eslint \"{**/*,*}.{js,ts,jsx,tsx}\"",
