@@ -1,6 +1,6 @@
 {
   "name": "rest-hook",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Composition of React query and Axios, the simple and powerful API call",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
