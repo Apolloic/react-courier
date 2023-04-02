@@ -2,14 +2,14 @@ import _ from 'lodash'
 
 import {
   CallBackArgsType,
-  CreateAxiosQueryHookEntranceType,
+  CreateRestHookEntranceType,
   DTONested,
   EndPointFunction,
   FunctionType,
-  axiosQueryObjectType,
+  RHookObjectType,
 } from '../types'
 
-export const getFinalEndPoint = <T extends CreateAxiosQueryHookEntranceType>(
+export const getFinalEndPoint = <T extends CreateRestHookEntranceType>(
   endPoint: string | EndPointFunction<T['endPointArgs']>,
   urlParams?: Record<keyof T['endPointArgs'], string | number>,
 ) => {
@@ -21,7 +21,7 @@ export const getFinalEndPoint = <T extends CreateAxiosQueryHookEntranceType>(
 }
 
 export const finalName = (
-  name: axiosQueryObjectType['name'],
+  name: RHookObjectType['name'],
   queryParams?: CallBackArgsType['queryParams'],
   urlParams?: CallBackArgsType['urlParams'],
 ) =>
@@ -33,7 +33,7 @@ export const finalName = (
     : name
 
 export const finalQueryParams = (
-  queryParams: axiosQueryObjectType['queryParams'],
+  queryParams: RHookObjectType['queryParams'],
   argQueryParams: CallBackArgsType['queryParams'],
 ) => (_.isFunction(queryParams) ? (queryParams as FunctionType)(argQueryParams) : queryParams)
 

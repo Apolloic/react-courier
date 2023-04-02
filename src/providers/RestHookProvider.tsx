@@ -1,10 +1,10 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import AxiosQueryContextProvider from './AxiosQueryContextProvider'
-import { AxiosQueryProviderPropsType } from '../types'
+import AxiosQueryContextProvider from './RestHookContextProvider'
+import { RHookProviderPropsType } from '../types'
 import React from 'react'
 const queryClient = new QueryClient()
 
-export function AxiosQueryProvider(props: AxiosQueryProviderPropsType) {
+export function RestHookProvider(props: RHookProviderPropsType) {
   return (
     <QueryClientProvider client={queryClient}>
       <AxiosQueryContextProvider

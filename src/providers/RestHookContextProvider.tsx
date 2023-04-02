@@ -1,15 +1,10 @@
 import React from 'react'
 import { DefaultOptions, useQueryClient } from '@tanstack/react-query'
 import { createContext, useMemo } from 'react'
-import { AxiosQueryProviderPropsType, ContextType } from '../types'
-export const AxiosQueryContext = createContext<ContextType>({})
+import { RHookProviderPropsType, ContextType } from '../types'
+export const RestHookContext = createContext<ContextType>({})
 
-function AxiosQueryContextProvider({
-  defaultBaseUrl,
-  otherBaseUrl,
-  defaultOptions,
-  children,
-}: AxiosQueryProviderPropsType) {
+function RestHookContextProvider({ defaultBaseUrl, otherBaseUrl, defaultOptions, children }: RHookProviderPropsType) {
   const queryClient = useQueryClient()
 
   if (defaultOptions) {
@@ -34,7 +29,7 @@ function AxiosQueryContextProvider({
     [defaultBaseUrl, otherBaseUrl, defaultOptions],
   )
 
-  return <AxiosQueryContext.Provider value={contextValueMemo}>{children}</AxiosQueryContext.Provider>
+  return <RestHookContext.Provider value={contextValueMemo}>{children}</RestHookContext.Provider>
 }
 
-export default AxiosQueryContextProvider
+export default RestHookContextProvider

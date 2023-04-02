@@ -1,2 +1,2 @@
 export { AxiosQuery } from './AxiosQuery'
-export { CreateApi } from './CreateApi'
+export { CreateRestHook } from './CreateApi'

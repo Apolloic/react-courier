@@ -3,16 +3,16 @@ import { PropsWithChildren } from 'react'
 import { AxiosRequestConfig } from 'axios'
 import { RegisterErrorDto, RegisterOtherBaseUrls } from '..'
 
-export declare type DTO<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<DTO<U>>}` : S
+export type DTO<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<DTO<U>>}` : S
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T
 
-export type QueryKeyType<T extends CreateAxiosQueryHookEntranceType> = {
+export type QueryKeyType<T extends CreateRestHookEntranceType> = {
   queryParams: T['dynamicQueryParams']
   urlParams: T['endPointArgs']
 }
 
-export declare type DTONested<T> = T extends Array<any>
+export type DTONested<T> = T extends Array<any>
   ? Array<DTONested<T[number]>>
   : T extends object
   ? {
@@ -20,12 +20,12 @@ export declare type DTONested<T> = T extends Array<any>
     }
   : T
 
-export declare type ValueOf<T> = T[keyof T]
+export type ValueOf<T> = T[keyof T]
 
-export type AQHookTypeHelper<T extends CreateAxiosQueryHookEntranceType> = T
-export type AQMethodTypeHelper<T extends 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'> = T
+export type RHookTypeHelper<T extends CreateRestHookEntranceType> = T
+export type RHookMethodTypeHelper<T extends 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'> = T
 
-export interface CreateAxiosQueryHookEntranceType {
+export interface CreateRestHookEntranceType {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   endPointArgs?: Record<string, number>
   responseData: Record<string, any>
@@ -37,13 +37,11 @@ export interface CreateAxiosQueryHookEntranceType {
   staticRequestData?: Record<any, any>
 }
 
-export declare type EndPointFunction<T> = (params: T) => string
+export type EndPointFunction<T> = (params: T) => string
 
-export declare type QueryParamsType<S, D> = D extends Record<any, any>
-  ? (args: Record<keyof D, ValueOf<D>>) => S & D
-  : S
+export type QueryParamsType<S, D> = D extends Record<any, any> ? (args: Record<keyof D, ValueOf<D>>) => S & D : S
 
-export type axiosQueryObjectType<T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType> = {
+export type RHookObjectType<T extends CreateRestHookEntranceType = CreateRestHookEntranceType> = {
   name:
     | ((args: T['endPointArgs'] & T['dynamicQueryParams'] & T['staticQueryParams']) => (string | number | boolean)[])
     | string[]
@@ -59,23 +57,23 @@ export type axiosQueryObjectType<T extends CreateAxiosQueryHookEntranceType = Cr
   dto?: (
     data: T['applyDefaultDto'] extends true ? DTONested<T['responseData']> : T['responseData'],
   ) => T['responseDataAfterDto']
-} & (T['method'] extends 'GET' ? {} : { requestData: T['staticRequestData'] })
+} & (T['method'] extends 'GET' ? {} : { requestData?: T['staticRequestData'] })
 
-export type CallBackArgsType<T extends CreateAxiosQueryHookEntranceType = CreateAxiosQueryHookEntranceType> = {
+export type CallBackArgsType<T extends CreateRestHookEntranceType = CreateRestHookEntranceType> = {
   urlParams: Record<keyof T['endPointArgs'], string | number>
   queryParams: T['dynamicQueryParams']
   requestData?: Record<string, any>
 }
 
-export type RequestType<T extends CreateAxiosQueryHookEntranceType> = T['dynamicQueryParams'] extends Record<any, any>
+export type RequestType<T extends CreateRestHookEntranceType> = T['dynamicQueryParams'] extends Record<any, any>
   ? ReturnType<QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>>
   : T['staticQueryParams']
 
-export type FinalResponseData<T extends CreateAxiosQueryHookEntranceType> = T['responseDataAfterDto'] extends unknown
+export type FinalResponseData<T extends CreateRestHookEntranceType> = T['responseDataAfterDto'] extends unknown
   ? T['responseData']
   : T['responseDataAfterDto']
 
-export interface AxiosQueryProviderPropsType extends PropsWithChildren {
+export interface RHookProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string
   otherBaseUrl?: Record<keyof RegisterOtherBaseUrls, string>
   defaultOptions?: DefaultOptions<RegisterErrorDto> & {
@@ -86,8 +84,8 @@ export interface AxiosQueryProviderPropsType extends PropsWithChildren {
 }
 
 export type ContextType = {
-  defaultBaseUrl?: AxiosQueryProviderPropsType['defaultBaseUrl']
-  otherBaseUrl?: AxiosQueryProviderPropsType['otherBaseUrl']
+  defaultBaseUrl?: RHookProviderPropsType['defaultBaseUrl']
+  otherBaseUrl?: RHookProviderPropsType['otherBaseUrl']
   headers?: Record<string, string>
   timeout?: number
   commonErrorDto?: (error: any) => RegisterErrorDto
@@ -111,5 +109,4 @@ export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig 
   data?: D
   queryParams?: Q
 }
-
 export type FunctionType = (data?: any) => any

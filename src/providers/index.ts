@@ -1,3 +1,3 @@
-export { AxiosQueryContext, default as AxiosQueryContextProvider } from './AxiosQueryContextProvider'
+export { RestHookContext, default as RestHookContextProvider } from './RestHookContextProvider'
 
-export { AxiosQueryProvider } from './AxiosQueryProvider'
+export { RestHookProvider } from './RestHookProvider'

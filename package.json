@@ -1,6 +1,6 @@
 {
-  "name": "axios-query",
-  "version": "1.0.0",
+  "name": "rest-hook",
+  "version": "0.1.0",
   "description": "Composition of React query and Axios, the simple and powerful API call",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ierfaaan/axios-query.git"
+    "url": "git+https://github.com/ierfaaan/rest-hook.git"
   },
   "keywords": [
     "axios",
@@ -25,9 +25,9 @@
   "author": "Erfan Abbasi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ierfaaan/axios-query/issues"
+    "url": "https://github.com/ierfaaan/rest-hook/issues"
   },
-  "homepage": "https://github.com/ierfaaan/axios-query#readme",
+  "homepage": "https://github.com/ierfaaan/rest-hook#readme",
   "dependencies": {
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-query-devtools": "^4.28.0",
