@@ -4,6 +4,11 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import RestHookProvider from 'rest-hook'
 
+declare module 'rest-hook' {
+  interface RegisterOtherBaseUrls {}
+  interface RegisterErrorDto {}
+}
+
 function App() {
   const [count, setCount] = useState(0)
 
