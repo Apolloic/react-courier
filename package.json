@@ -15,19 +15,6 @@
     "prepublishOnly": "npm run prettier && npm run lint",
     "release": "release-it"
   },
-  "exports": {
-    ".": {
-      "default": {
-        "require": "./dist/esm/index.js",
-        "default": "./index.js"
-      },
-      "types": {
-        "require": "./dist/esm/index.d.ts",
-        "default": "./index.d.ts"
-      }
-    },
-    "./package.json": "./package.json"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ierfaaan/rest-hook.git"
