@@ -12,9 +12,9 @@ import {
   RHookObjectType,
 } from '../types'
 import { finalName, finalQueryParams, getFinalEndPoint } from '../utils'
-import { RestHookContext } from '../providers'
 import { AxiosQuery } from './AxiosQuery'
 import { RegisterErrorDto } from '..'
+import { RestHookContext } from '../providers/RestHookContextProvider'
 
 export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObjectType: RHookObjectType<T>) => {
   const useCustom = (args?: CallBackArgsType<T>) => {
