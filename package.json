@@ -15,6 +15,9 @@
     "prepublishOnly": "npm run prettier && npm run lint",
     "release": "release-it"
   },
+  "exports": {
+    ".": "./index.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ierfaaan/rest-hook.git"
