@@ -2,3 +2,5 @@ node_modules
 yarn.lock
 dist
 yarn-error.log
+example/dist
+example/node_modules
