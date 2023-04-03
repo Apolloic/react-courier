@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "npx lerna run dev --parallel",
     "build": "npx lerna run build --scope=rest-hook",
-    "lint": "eslint \"{packages,example/src}/**/*.{js,ts,jsx,tsx}\"",
-    "prettier": "prettier --write \"{packages,example/src}/**/*.{js,ts,jsx,tsx}\"",
+    "lint": "npx lerna run lint",
+    "prettier": "npx lerna run prettier",
     "prepublishOnly": "npx lerna run prepublishOnly --parallel",
     "release": "npx lerna run release --scope=rest-hook"
   },
