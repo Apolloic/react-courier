@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "npm run build -- --watch",
-    "lint": "eslint \"{**/*,*}.{js,ts,jsx,tsx}\"",
+    "lint": "eslint \"{src/*,*}.{js,ts,jsx,tsx}\"",
     "prettier": "prettier --write \"{src,tests,example/src}/**/*.{js,ts,jsx,tsx}\"",
     "prepublishOnly": "npm run prettier && npm run lint",
     "release": "release-it"

@@ -8,7 +8,7 @@
     "build": "npx lerna run build --scope=rest-hook",
     "lint": "npx lerna run lint",
     "prettier": "npx lerna run prettier",
-    "prepublishOnly": "npx lerna run prepublishOnly --parallel",
+    "prepublishOnly": "npx lerna run prepublishOnly --scope=rest-hook",
     "release": "npx lerna run release --scope=rest-hook"
   },
   "author": "",
