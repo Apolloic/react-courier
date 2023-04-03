@@ -33,7 +33,7 @@ function RestHookContextProvider({
       middleware,
       commonErrorDto: defaultOptions?.errorDto,
     }),
-    [defaultBaseUrl, otherBaseUrl, defaultOptions],
+    [defaultBaseUrl, otherBaseUrl, defaultOptions, middleware],
   )
 
   return <RestHookContext.Provider value={contextValueMemo}>{children}</RestHookContext.Provider>
