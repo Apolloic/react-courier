@@ -11,6 +11,7 @@ export function RestHookProvider(props: RHookProviderPropsType) {
         otherBaseUrl={props.otherBaseUrl}
         defaultOptions={props.defaultOptions}
         defaultBaseUrl={props.defaultBaseUrl}
+        middleware={props.middleware}
       >
         {props.children}
       </AxiosQueryContextProvider>

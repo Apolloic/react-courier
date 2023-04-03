@@ -4,7 +4,13 @@ import { createContext, useMemo } from 'react'
 import { RHookProviderPropsType, ContextType } from '../types/types'
 export const RestHookContext = createContext<ContextType>({})
 
-function RestHookContextProvider({ defaultBaseUrl, otherBaseUrl, defaultOptions, children }: RHookProviderPropsType) {
+function RestHookContextProvider({
+  defaultBaseUrl,
+  otherBaseUrl,
+  defaultOptions,
+  children,
+  middleware,
+}: RHookProviderPropsType) {
   const queryClient = useQueryClient()
 
   if (defaultOptions) {
@@ -24,6 +30,7 @@ function RestHookContextProvider({ defaultBaseUrl, otherBaseUrl, defaultOptions,
       otherBaseUrl,
       headers: defaultOptions?.headers,
       timeout: defaultOptions?.timeout,
+      middleware,
       commonErrorDto: defaultOptions?.errorDto,
     }),
     [defaultBaseUrl, otherBaseUrl, defaultOptions],

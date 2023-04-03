@@ -22,6 +22,7 @@ export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
   async request<ResponseType = any, QueryParamsType = any, RequestDataType = any>(
     url: string,
     configs?: RequestConfigType<RequestDataType, QueryParamsType>,
+    middleware?: (data: ResponseType) => void,
   ) {
     try {
       let response: AxiosResponse<ResponseType>
@@ -45,6 +46,8 @@ export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
           })
           break
       }
+
+      middleware?.(response.data)
 
       if (this.options?.hasDefaultDto) {
         if (this.options?.exteraDto) {

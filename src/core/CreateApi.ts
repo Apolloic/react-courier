@@ -18,7 +18,7 @@ import { RestHookContext } from '../providers/RestHookContextProvider'
 
 export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObjectType: RHookObjectType<T>) => {
   const useCustom = (args?: CallBackArgsType<T>) => {
-    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout } = useContext(RestHookContext)
+    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware } = useContext(RestHookContext)
 
     const axiosQuery = new AxiosQuery({
       timeout: RHookObjectType.timeout ? RHookObjectType.timeout : timeout ?? 5,
@@ -51,20 +51,24 @@ export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObject
     let result
     if (RHookObjectType.method !== 'GET') {
       result = useMutation(finalName(RHookObjectType.name, args?.queryParams, args?.urlParams), async (data: any) => {
-        return axiosQuery.request<T['responseDataAfterDto'], RequestType<T>>(endPoint, {
-          method: RHookObjectType.method,
-          data: {
-            ...(RHookObjectType as RHookObjectType).requestData,
-            ...data,
+        return axiosQuery.request<T['responseDataAfterDto'], RequestType<T>>(
+          endPoint,
+          {
+            method: RHookObjectType.method,
+            data: {
+              ...(RHookObjectType as RHookObjectType).requestData,
+              ...data,
+            },
+            ...configs,
           },
-          ...configs,
-        })
+          middleware,
+        )
       })
     } else {
       result = useQuery(
         finalName(RHookObjectType.name, args?.queryParams, args?.urlParams),
         async () => {
-          const data = axiosQuery.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs)
+          const data = axiosQuery.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs, middleware)
           return data
         },
         RHookObjectType?.options,

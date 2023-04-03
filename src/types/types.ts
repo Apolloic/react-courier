@@ -73,8 +73,11 @@ export type FinalResponseData<T extends CreateRestHookEntranceType> = T['respons
   ? T['responseData']
   : T['responseDataAfterDto']
 
+export type MiddelwareType = (data: any) => void
+
 export interface RHookProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string
+  middleware?: MiddelwareType
   otherBaseUrl?: Record<keyof RegisterOtherBaseUrls, string>
   defaultOptions?: DefaultOptions<RegisterErrorDto> & {
     timeout?: number
@@ -89,6 +92,7 @@ export type ContextType = {
   headers?: Record<string, string>
   timeout?: number
   commonErrorDto?: (error: any) => RegisterErrorDto
+  middleware?: MiddelwareType
 }
 
 export type MultipleBaseUrlType = Record<string, string>
