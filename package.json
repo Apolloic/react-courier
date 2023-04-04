@@ -1,5 +1,5 @@
 {
-  "name": "rest-hook",
+  "name": "axios-query",
   "version": "1.0.0",
   "description": "Composition of React query and Axios, the simple and powerful API call",
   "main": "dist/index.js",
