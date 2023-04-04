@@ -3,60 +3,60 @@ import { useContext } from 'react'
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanstack/react-query'
 import {
   CallBackArgsType,
-  CreateRestHookEntranceType,
+  CreateAxiosQueryEntranceType,
   FinalResponseData,
   QueryKeyType,
   QueryParamsType,
+  RegisterErrorDto,
   RequestConfigType,
   RequestType,
-  RHookObjectType,
-} from '../types/types'
+  AxiosQueryObjectType,
+} from '../types'
 import { finalName, finalQueryParams, getFinalEndPoint } from '../utils'
 import { AxiosQuery } from './AxiosQuery'
-import { RegisterErrorDto } from '..'
-import { RestHookContext } from '../providers/RestHookContextProvider'
+import { AxiosQueryContext } from '../providers/AxiosQueryContextProvider'
 
-export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObjectType: RHookObjectType<T>) => {
+export const CreateApi = <T extends CreateAxiosQueryEntranceType>(AxiosQueryObject: AxiosQueryObjectType<T>) => {
   const useCustom = (args?: CallBackArgsType<T>) => {
-    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware } = useContext(RestHookContext)
+    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware } = useContext(AxiosQueryContext)
 
     const axiosQuery = new AxiosQuery({
-      timeout: RHookObjectType.timeout ? RHookObjectType.timeout : timeout ?? 5,
-      publicHeaders: { ...headers, ...RHookObjectType.headers },
-      baseUrl: RHookObjectType.baseUrl
-        ? RHookObjectType.baseUrl !== 'default'
-          ? otherBaseUrl?.[RHookObjectType.baseUrl]
+      timeout: AxiosQueryObject.timeout ? AxiosQueryObject.timeout : timeout ?? 5,
+      publicHeaders: { ...headers, ...AxiosQueryObject.headers },
+      baseUrl: AxiosQueryObject.baseUrl
+        ? AxiosQueryObject.baseUrl !== 'default'
+          ? otherBaseUrl?.[AxiosQueryObject.baseUrl]
           : defaultBaseUrl
         : defaultBaseUrl,
       options: {
         commonErrorDto: commonErrorDto,
-        exteraDto: RHookObjectType.dto,
-        hasDefaultDto: RHookObjectType?.options?.applyDefaultDto ?? false,
+        exteraDto: AxiosQueryObject.dto,
+        hasDefaultDto: AxiosQueryObject?.options?.applyDefaultDto ?? false,
       },
     })
 
-    const endPoint = getFinalEndPoint<T>(RHookObjectType.endPoint, args?.urlParams)
+    const endPoint = getFinalEndPoint<T>(AxiosQueryObject.endPoint, args?.urlParams)
     const configs: RequestConfigType<
       T['responseDataAfterDto'],
       T['dynamicQueryParams'] extends Record<any, any>
         ? ReturnType<QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>>
         : T['staticQueryParams']
     > = {
-      method: RHookObjectType.method,
-      queryParams: RHookObjectType.queryParams
-        ? finalQueryParams(RHookObjectType.queryParams, args?.queryParams)
+      method: AxiosQueryObject.method,
+      queryParams: AxiosQueryObject.queryParams
+        ? finalQueryParams(AxiosQueryObject.queryParams, args?.queryParams)
         : args?.queryParams,
     }
 
     let result
-    if (RHookObjectType.method !== 'GET') {
-      result = useMutation(finalName(RHookObjectType.name, args?.queryParams, args?.urlParams), async (data: any) => {
+    if (AxiosQueryObject.method !== 'GET') {
+      result = useMutation(finalName(AxiosQueryObject.name, args?.queryParams, args?.urlParams), async (data: any) => {
         return axiosQuery.request<T['responseDataAfterDto'], RequestType<T>>(
           endPoint,
           {
-            method: RHookObjectType.method,
+            method: AxiosQueryObject.method,
             data: {
-              ...(RHookObjectType as RHookObjectType).requestData,
+              ...(AxiosQueryObject as AxiosQueryObjectType).requestData,
               ...data,
             },
             ...configs,
@@ -66,12 +66,12 @@ export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObject
       })
     } else {
       result = useQuery(
-        finalName(RHookObjectType.name, args?.queryParams, args?.urlParams),
+        finalName(AxiosQueryObject.name, args?.queryParams, args?.urlParams),
         async () => {
           const data = axiosQuery.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs, middleware)
           return data
         },
-        RHookObjectType?.options,
+        AxiosQueryObject?.options,
       )
     }
 
@@ -79,6 +79,7 @@ export const CreateRestHook = <T extends CreateRestHookEntranceType>(RHookObject
       ? UseQueryResult<FinalResponseData<T>, RegisterErrorDto>
       : UseMutationResult<FinalResponseData<T>, RegisterErrorDto, T['dynamicRequestData']>
   }
-  useCustom.getQueryKey = (args: QueryKeyType<T>) => finalName(RHookObjectType.name, args?.queryParams, args?.urlParams)
+  useCustom.getQueryKey = (args: QueryKeyType<T>) =>
+    finalName(AxiosQueryObject.name, args?.queryParams, args?.urlParams)
   return useCustom
 }

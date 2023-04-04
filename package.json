@@ -1,31 +1,57 @@
 {
+  "name": "rest-hook",
   "version": "1.0.0",
-  "private": true,
-  "description": "",
-  "main": "index.js",
+  "description": "Composition of React query and Axios, the simple and powerful API call",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "dev": "npx lerna run dev --parallel",
-    "build": "npx lerna run build --scope=rest-hook",
-    "lint": "npx lerna run lint",
-    "prettier": "npx lerna run prettier",
-    "prepublishOnly": "npx lerna run prepublishOnly --scope=rest-hook",
-    "release": "npx lerna run release --scope=rest-hook"
+    "build": "tsup ./package/index.ts --format esm,cjs --dts",
+    "lint": "eslint \"{package/src/*,example/src/*,*}.{js,ts,jsx,tsx}\"",
+    "prettier": "prettier --write \"{package/src,package/tests,example/src}/**/*.{js,ts,jsx,tsx}\"",
+    "prepublish": "npm run prettier && npm run lint",
+    "dev:exam": "cd ./example && npm run dev",
+    "dev:package": "npm run build -- --watch",
+    "dev": "concurrently npm:dev:*",
+    "publish": "npm run prepublishOnly && npm run build && release-it"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ierfaaan/rest-hook.git"
+  },
+  "keywords": [
+    "axios",
+    "tanstack",
+    "react-query",
+    "tanstack-query"
+  ],
+  "author": "Erfan Abbasi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ierfaaan/rest-hook/issues"
+  },
+  "homepage": "https://github.com/ierfaaan/rest-hook#readme",
   "dependencies": {
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-query-devtools": "^4.28.0",
     "axios": "^1.3.4",
     "lodash": "^4.17.21"
   },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
-    "lerna": "^6.6.1",
     "@types/lodash": "^4.14.192",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.31",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
+    "concurrently": "^8.0.1",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -38,9 +64,5 @@
     "tslib": "^2.5.0",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3"
-  },
-  "workspaces": [
-    "./packages/*",
-    "./example"
-  ]
+  }
 }

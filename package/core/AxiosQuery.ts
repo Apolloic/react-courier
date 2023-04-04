@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { defaultDto } from '../utils'
-import { BaseUrlType, ConstructorArgsType, RequestConfigType } from '../types/types'
+import { BaseUrlType, ConstructorArgsType, RequestConfigType } from '../types'
 
 export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl
@@ -22,7 +22,7 @@ export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
   async request<ResponseType = any, QueryParamsType = any, RequestDataType = any>(
     url: string,
     configs?: RequestConfigType<RequestDataType, QueryParamsType>,
-    middleware?: (data: ResponseType) => void,
+    middleware?: (data: AxiosResponse) => void,
   ) {
     try {
       let response: AxiosResponse<ResponseType>
@@ -47,7 +47,7 @@ export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
           break
       }
 
-      middleware?.(response.data)
+      middleware?.(response)
 
       if (this.options?.hasDefaultDto) {
         if (this.options?.exteraDto) {

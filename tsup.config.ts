@@ -8,9 +8,9 @@ export const tsup: Options = {
   minify: false,
   bundle: true,
   skipNodeModulesBundle: true,
-  entryPoints: ['src/index.ts'],
+  entryPoints: ['package/index.ts'],
   watch: false,
   target: 'es2020',
   outDir: 'dist',
-  entry: ['src/**/*.ts'], //include all files under src
+  entry: ['package/**/*.ts'], //include all files under src
 }
