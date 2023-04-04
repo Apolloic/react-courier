@@ -18,8 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "rest-hook": ["../package/index.ts"],
-      "rest-hook/types": ["../package/types/index.ts"]
+      "react-courier": ["../package/index.ts"],
+      "react-courier/types": ["../package/types/index.ts"]
     }
   },
   "include": ["src"],

@@ -2,14 +2,14 @@ import _ from 'lodash'
 
 import {
   CallBackArgsType,
-  CreateRestHookEntranceType,
+  CreateCourierEntranceType,
   DTONested,
   EndPointFunction,
   FunctionType,
-  RHookObjectType,
+  CourierObjectType,
 } from '../types'
 
-export const getFinalEndPoint = <T extends CreateRestHookEntranceType>(
+export const getFinalEndPoint = <T extends CreateCourierEntranceType>(
   endPoint: string | EndPointFunction<T['endPointArgs']>,
   urlParams?: Record<keyof T['endPointArgs'], string | number>,
 ) => {
@@ -21,7 +21,7 @@ export const getFinalEndPoint = <T extends CreateRestHookEntranceType>(
 }
 
 export const finalName = (
-  name: RHookObjectType['name'],
+  name: CourierObjectType['name'],
   queryParams?: CallBackArgsType['queryParams'],
   urlParams?: CallBackArgsType['urlParams'],
 ) =>
@@ -33,7 +33,7 @@ export const finalName = (
     : name
 
 export const finalQueryParams = (
-  queryParams: RHookObjectType['queryParams'],
+  queryParams: CourierObjectType['queryParams'],
   argQueryParams: CallBackArgsType['queryParams'],
 ) => (_.isFunction(queryParams) ? (queryParams as FunctionType)(argQueryParams) : queryParams)
 

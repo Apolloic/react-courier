@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from '@/App'
-import { AxiosQueryProvider } from 'rest-hook'
+import { CourierProvider } from 'react-courier'
 
-declare module 'rest-hook/types' {
+declare module 'react-courier/types' {
   interface RegisterOtherBaseUrls {
     test: string
   }
@@ -11,7 +11,7 @@ declare module 'rest-hook/types' {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <AxiosQueryProvider
+  <CourierProvider
     otherBaseUrl={{
       test: 'salam',
     }}
@@ -30,5 +30,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
-  </AxiosQueryProvider>,
+  </CourierProvider>,
 )

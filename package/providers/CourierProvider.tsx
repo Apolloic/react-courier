@@ -1,20 +1,20 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import AxiosQueryContextProvider from './AxiosQueryContextProvider'
-import { AxiosQueryProviderPropsType } from '../types'
+import CourierContextProvider from './CourierContextProvider'
+import { CourierProviderPropsType } from '../types'
 import React from 'react'
 const queryClient = new QueryClient()
 
-export function AxiosQueryProvider(props: AxiosQueryProviderPropsType) {
+export function CourierProvider(props: CourierProviderPropsType) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AxiosQueryContextProvider
+      <CourierContextProvider
         otherBaseUrl={props.otherBaseUrl}
         defaultOptions={props.defaultOptions}
         defaultBaseUrl={props.defaultBaseUrl}
         middleware={props.middleware}
       >
         {props.children}
-      </AxiosQueryContextProvider>
+      </CourierContextProvider>
     </QueryClientProvider>
   )
 }

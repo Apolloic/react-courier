@@ -1,16 +1,16 @@
 import React from 'react'
 import { DefaultOptions, useQueryClient } from '@tanstack/react-query'
 import { createContext, useMemo } from 'react'
-import { AxiosQueryProviderPropsType, ContextType } from '../types'
-export const AxiosQueryContext = createContext<ContextType>({})
+import { CourierProviderPropsType, ContextType } from '../types'
+export const CourierContext = createContext<ContextType>({})
 
-function AxiosQueryContextProvider({
+function CourierContextProvider({
   defaultBaseUrl,
   otherBaseUrl,
   defaultOptions,
   children,
   middleware,
-}: AxiosQueryProviderPropsType) {
+}: CourierProviderPropsType) {
   const queryClient = useQueryClient()
 
   if (defaultOptions) {
@@ -36,7 +36,7 @@ function AxiosQueryContextProvider({
     [defaultBaseUrl, otherBaseUrl, defaultOptions, middleware],
   )
 
-  return <AxiosQueryContext.Provider value={contextValueMemo}>{children}</AxiosQueryContext.Provider>
+  return <CourierContext.Provider value={contextValueMemo}>{children}</CourierContext.Provider>
 }
 
-export default AxiosQueryContextProvider
+export default CourierContextProvider

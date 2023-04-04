@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { defaultDto } from '../utils'
 import { BaseUrlType, ConstructorArgsType, RequestConfigType } from '../types'
 
-export class AxiosQuery<BaseUrl extends BaseUrlType = BaseUrlType> {
+export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl
   private agent: AxiosInstance
   public options: ConstructorArgsType<BaseUrl>['options']

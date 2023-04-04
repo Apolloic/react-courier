@@ -1,6 +1,6 @@
-import { CreateApi, AxiosQueryTypeHelper } from 'rest-hook'
+import { CreateApi, CourierTypeHelper } from 'react-courier'
 
-type useGetPostType = AxiosQueryTypeHelper<{
+type useGetPostType = CourierTypeHelper<{
   method: 'GET'
   responseData: {
     title: string

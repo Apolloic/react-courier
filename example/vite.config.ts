@@ -9,8 +9,8 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, 'src') },
-      { find: 'rest-hook', replacement: path.resolve(__dirname, '../package/index.ts') },
-      { find: 'rest-hook/types', replacement: path.resolve(__dirname, '../package/types/index.ts') },
+      { find: 'react-courier', replacement: path.resolve(__dirname, '../package/index.ts') },
+      { find: 'react-courier/types', replacement: path.resolve(__dirname, '../package/types/index.ts') },
     ],
   },
 })
