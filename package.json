@@ -9,7 +9,7 @@
     "build": "tsup ./package/index.ts --format esm,cjs --dts",
     "lint": "eslint \"{package/src/*,example/src/*,*}.{js,ts,jsx,tsx}\"",
     "prettier": "prettier --write \"{package/src,package/tests,example/src}/**/*.{js,ts,jsx,tsx}\"",
-    "prepublish": "npm run prettier && npm run lint",
+    "prepublishOnly": "npm run prettier && npm run lint",
     "dev:exam": "cd ./example && npm run dev",
     "dev:package": "npm run build -- --watch",
     "dev": "concurrently npm:dev:*",
@@ -64,5 +64,23 @@
     "tslib": "^2.5.0",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): v${version}",
+      "push": true,
+      "commit": true,
+      "tag": true,
+      "requireCommits": false,
+      "requireCleanWorkingDir": false
+    },
+    "github": {
+      "release": true,
+      "draft": true
+    },
+    "npm": {
+      "publish": false,
+      "ignoreVersion": false
+    }
   }
 }
