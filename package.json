@@ -13,7 +13,7 @@
     "dev:exam": "cd ./example && npm run dev",
     "dev:package": "npm run build -- --watch",
     "dev": "concurrently npm:dev:*",
-    "publish": "npm run prepublishOnly && npm run build && release-it"
+    "publish": "npm run build && release-it"
   },
   "repository": {
     "type": "git",
@@ -77,10 +77,6 @@
     "github": {
       "release": true,
       "draft": true
-    },
-    "npm": {
-      "publish": false,
-      "ignoreVersion": false
     }
   }
 }
