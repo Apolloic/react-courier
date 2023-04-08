@@ -63,6 +63,7 @@ export type CourierObjectType<T extends CreateCourierEntranceType = CreateCourie
         applyDefaultDto?: boolean
       }
   headers?: Record<string, string>
+  axiosAgentConfig?: axiosAgentConfigType
   timeout?: number
   dto?: (
     data: T['applyDefaultDto'] extends true ? DTONested<T['responseData']> : T['responseData'],
@@ -88,6 +89,8 @@ export type FinalResponseData<T extends CreateCourierEntranceType> = T['response
 
 export type MiddelwareType = (data: AxiosResponse<any, any>) => void
 
+type axiosAgentConfigType = Omit<CreateAxiosDefaults<any>, 'timeout' | 'baseURL' | 'headers' | 'data'>
+
 export interface CourierProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string
   middleware?: MiddelwareType
@@ -96,12 +99,14 @@ export interface CourierProviderPropsType extends PropsWithChildren {
     timeout?: number
     headers?: Record<string, string>
     errorDto?: (error: any) => RegisterErrorDto
+    axiosAgentConfig?: axiosAgentConfigType
   }
 }
 
 export type ContextType = {
   defaultBaseUrl?: CourierProviderPropsType['defaultBaseUrl']
   otherBaseUrl?: CourierProviderPropsType['otherBaseUrl']
+  axiosAgentConfig?: axiosAgentConfigType
   headers?: Record<string, string>
   timeout?: number
   commonErrorDto?: (error: any) => RegisterErrorDto
@@ -113,7 +118,7 @@ export type BaseUrlType = string | MultipleBaseUrlType
 
 export interface ConstructorArgsType<BaseUrl> {
   baseUrl?: BaseUrl
-  otherAxiosAgentConfig: CreateAxiosDefaults<any>
+  axiosAgentConfig: CreateAxiosDefaults<any>
   timeout: number
   options?: {
     hasDefaultDto?: boolean

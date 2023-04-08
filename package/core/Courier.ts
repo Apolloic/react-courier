@@ -25,11 +25,13 @@ import { CourierContext } from '../providers/CourierContextProvider'
 
 export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: CourierObjectType<T>) => {
   const useCustom = (args?: CallBackArgsType<T>) => {
-    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware } = useContext(CourierContext)
+    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware, axiosAgentConfig } =
+      useContext(CourierContext)
 
     const Courier = new Axios({
       timeout: CourierObject.timeout ? CourierObject.timeout : timeout ?? 5,
       publicHeaders: { ...headers, ...CourierObject.headers },
+      axiosAgentConfig: { ...axiosAgentConfig, ...CourierObject.axiosAgentConfig },
       baseUrl: CourierObject.baseUrl
         ? CourierObject.baseUrl !== 'default'
           ? otherBaseUrl?.[CourierObject.baseUrl]

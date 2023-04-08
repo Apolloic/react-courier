@@ -7,18 +7,18 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
   private agent: AxiosInstance
   public options: ConstructorArgsType<BaseUrl>['options']
   public otherAxiosAgentConfig: CreateAxiosDefaults<any>
-  constructor({ baseUrl, timeout, publicHeaders, options, otherAxiosAgentConfig }: ConstructorArgsType<BaseUrl>) {
+  constructor({ baseUrl, timeout, publicHeaders, options, axiosAgentConfig }: ConstructorArgsType<BaseUrl>) {
     this.baseUrl = baseUrl
     this.options = options
-    this.otherAxiosAgentConfig = otherAxiosAgentConfig
+    this.otherAxiosAgentConfig = axiosAgentConfig
     this.agent = axios.create({
+      ...axiosAgentConfig,
       baseURL: typeof baseUrl === 'string' ? baseUrl : undefined,
       headers: {
         'Content-Type': 'application/json',
         ...publicHeaders,
       },
       timeout: timeout * 1000,
-      ...otherAxiosAgentConfig,
     })
   }
 
