@@ -1,4 +1,4 @@
-import { DefaultOptions, UseQueryOptions } from '@tanstack/react-query'
+import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { PropsWithChildren } from 'react'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
@@ -55,9 +55,13 @@ export type CourierObjectType<T extends CreateCourierEntranceType = CreateCourie
   method: T['method']
   endPoint: EndPointFunction<T['endPointArgs']> | string
   queryParams?: QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>
-  options?: UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto> & {
-    applyDefaultDto?: boolean
-  }
+  options?: T['method'] extends 'GET'
+    ? UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto> & {
+        applyDefaultDto?: boolean
+      }
+    : UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto> & {
+        applyDefaultDto?: boolean
+      }
   headers?: Record<string, string>
   timeout?: number
   dto?: (
@@ -66,9 +70,12 @@ export type CourierObjectType<T extends CreateCourierEntranceType = CreateCourie
 } & (T['method'] extends 'GET' ? {} : { requestData?: T['staticRequestData'] })
 
 export type CallBackArgsType<T extends CreateCourierEntranceType = CreateCourierEntranceType> = {
-  urlParams: Record<keyof T['endPointArgs'], string | number>
-  queryParams: T['dynamicQueryParams']
+  urlParams?: Record<keyof T['endPointArgs'], string | number>
+  queryParams?: T['dynamicQueryParams']
   requestData?: Record<string, any>
+  options?: T['method'] extends 'GET'
+    ? UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>
+    : UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto>
 }
 
 export type RequestType<T extends CreateCourierEntranceType> = T['dynamicQueryParams'] extends Record<any, any>

@@ -1,6 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useContext } from 'react'
-import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanstack/react-query'
+import {
+  UseMutationResult,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query'
 import {
   CallBackArgsType,
   CreateCourierEntranceType,
@@ -50,20 +57,27 @@ export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: Co
 
     let result
     if (CourierObject.method !== 'GET') {
-      result = useMutation(finalName(CourierObject.name, args?.queryParams, args?.urlParams), async (data: any) => {
-        return Courier.request<T['responseDataAfterDto'], RequestType<T>>(
-          endPoint,
-          {
-            method: CourierObject.method,
-            data: {
-              ...(CourierObject as CourierObjectType).requestData,
-              ...data,
+      result = useMutation(
+        finalName(CourierObject.name, args?.queryParams, args?.urlParams),
+        async (data: any) => {
+          return Courier.request<T['responseDataAfterDto'], RequestType<T>>(
+            endPoint,
+            {
+              method: CourierObject.method,
+              data: {
+                ...(CourierObject as CourierObjectType).requestData,
+                ...data,
+              },
+              ...configs,
             },
-            ...configs,
-          },
-          middleware,
-        )
-      })
+            middleware,
+          )
+        },
+        {
+          ...(CourierObject?.options as UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto>),
+          ...(args?.options as UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto>),
+        },
+      )
     } else {
       result = useQuery(
         finalName(CourierObject.name, args?.queryParams, args?.urlParams),
@@ -71,7 +85,10 @@ export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: Co
           const data = Courier.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs, middleware)
           return data
         },
-        CourierObject?.options,
+        {
+          ...(CourierObject?.options as UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>),
+          ...(args?.options as UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>),
+        },
       )
     }
 
