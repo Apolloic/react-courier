@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { defaultDto } from '../utils'
 import { BaseUrlType, ConstructorArgsType, RequestConfigType } from '../types'
 
@@ -6,9 +6,11 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl
   private agent: AxiosInstance
   public options: ConstructorArgsType<BaseUrl>['options']
-  constructor({ baseUrl, timeout, publicHeaders, options }: ConstructorArgsType<BaseUrl>) {
+  public otherAxiosAgentConfig: CreateAxiosDefaults<any>
+  constructor({ baseUrl, timeout, publicHeaders, options, otherAxiosAgentConfig }: ConstructorArgsType<BaseUrl>) {
     this.baseUrl = baseUrl
     this.options = options
+    this.otherAxiosAgentConfig = otherAxiosAgentConfig
     this.agent = axios.create({
       baseURL: typeof baseUrl === 'string' ? baseUrl : undefined,
       headers: {
@@ -16,6 +18,7 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
         ...publicHeaders,
       },
       timeout: timeout * 1000,
+      ...otherAxiosAgentConfig,
     })
   }
 

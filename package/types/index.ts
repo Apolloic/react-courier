@@ -1,6 +1,6 @@
 import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { PropsWithChildren } from 'react'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 
 export interface RegisterErrorDto {
   // Register Error DTO
@@ -113,6 +113,7 @@ export type BaseUrlType = string | MultipleBaseUrlType
 
 export interface ConstructorArgsType<BaseUrl> {
   baseUrl?: BaseUrl
+  otherAxiosAgentConfig: CreateAxiosDefaults<any>
   timeout: number
   options?: {
     hasDefaultDto?: boolean
