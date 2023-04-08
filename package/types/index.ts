@@ -33,11 +33,11 @@ export type CourierMethodTypeHelper<T extends 'GET' | 'POST' | 'PUT' | 'PATCH' |
 
 export interface CreateCourierEntranceType {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-  endPointArgs?: Record<string, number>
-  responseData: Record<string, any>
-  staticQueryParams?: Record<string, string | number>
-  dynamicQueryParams?: Record<string, string | number>
-  responseDataAfterDto?: Record<string, any>
+  endPointArgs?: Record<any, any>
+  responseData: Record<any, any>
+  staticQueryParams?: Record<any, any>
+  dynamicQueryParams?: Record<any, any>
+  responseDataAfterDto?: Record<any, any>
   applyDefaultDto?: boolean
   dynamicRequestData?: Record<any, any>
   staticRequestData?: Record<any, any>
