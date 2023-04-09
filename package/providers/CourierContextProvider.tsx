@@ -28,6 +28,7 @@ function CourierContextProvider({
     () => ({
       defaultBaseUrl: defaultBaseUrl,
       otherBaseUrl,
+      axiosAgentConfig: defaultOptions?.axiosAgentConfig,
       headers: defaultOptions?.headers,
       timeout: defaultOptions?.timeout,
       middleware,
