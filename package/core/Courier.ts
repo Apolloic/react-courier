@@ -13,7 +13,6 @@ import {
   CreateCourierEntranceType,
   FinalResponseData,
   QueryKeyType,
-  QueryParamsType,
   RegisterErrorDto,
   RequestConfigType,
   RequestType,
@@ -28,6 +27,12 @@ export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: Co
     const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware, axiosAgentConfig } =
       useContext(CourierContext)
 
+    const options = {
+      commonErrorDto: commonErrorDto,
+      exteraDto: (CourierObject as any).dto,
+      hasDefaultDto: (CourierObject?.options as any)?.applyDefaultDto ?? false,
+    }
+
     const Courier = new Axios({
       timeout: CourierObject.timeout ? CourierObject.timeout : timeout ?? 5,
       publicHeaders: { ...headers, ...CourierObject.headers },
@@ -37,37 +42,29 @@ export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: Co
           ? otherBaseUrl?.[CourierObject.baseUrl]
           : defaultBaseUrl
         : defaultBaseUrl,
-      options: {
-        commonErrorDto: commonErrorDto,
-        exteraDto: CourierObject.dto,
-        hasDefaultDto: CourierObject?.options?.applyDefaultDto ?? false,
-      },
+      options,
     })
 
     const endPoint = getFinalEndPoint<T>(CourierObject.endPoint, args?.urlParams)
     const configs: RequestConfigType<
       T['responseDataAfterDto'],
-      T['dynamicQueryParams'] extends Record<any, any>
-        ? ReturnType<QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>>
-        : T['staticQueryParams']
+      T['dynamicQueryParams'] extends {} ? T['staticQueryParams'] & T['dynamicQueryParams'] : T['staticQueryParams']
     > = {
       method: CourierObject.method,
-      queryParams: CourierObject.queryParams
-        ? finalQueryParams(CourierObject.queryParams, args?.queryParams)
-        : args?.queryParams,
+      queryParams: finalQueryParams((CourierObject as any)?.queryParams, (args as any)?.queryParams),
     }
 
     let result
     if (CourierObject.method !== 'GET') {
       result = useMutation(
-        finalName(CourierObject.name, args?.queryParams, args?.urlParams),
-        async (data: any) => {
+        finalName(CourierObject.name, (args as any)?.queryParams, args?.urlParams),
+        async (data: T['dynamicRequestData']) => {
           return Courier.request<T['responseDataAfterDto'], RequestType<T>>(
             endPoint,
             {
               method: CourierObject.method,
               data: {
-                ...(CourierObject as CourierObjectType).requestData,
+                ...(CourierObject as any).requestData,
                 ...data,
               },
               ...configs,
@@ -76,13 +73,21 @@ export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: Co
           )
         },
         {
-          ...(CourierObject?.options as UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto>),
-          ...(args?.options as UseMutationOptions<T['responseDataAfterDto'], RegisterErrorDto>),
+          ...(CourierObject?.options as UseMutationOptions<
+            T['responseDataAfterDto'],
+            RegisterErrorDto,
+            T['dynamicRequestData']
+          >),
+          ...(args?.options as UseMutationOptions<
+            T['responseDataAfterDto'],
+            RegisterErrorDto,
+            T['dynamicRequestData']
+          >),
         },
       )
     } else {
       result = useQuery(
-        finalName(CourierObject.name, args?.queryParams, args?.urlParams),
+        finalName(CourierObject.name, (args as any)?.queryParams, args?.urlParams),
         async () => {
           const data = Courier.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs, middleware)
           return data

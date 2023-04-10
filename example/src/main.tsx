@@ -16,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       test: 'salam',
     }}
     defaultOptions={{
-      axiosAgentConfig: {},
+      axiosAgentConfig: {
+        withCredentials: true,
+      },
       queries: {
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,

@@ -22,20 +22,41 @@ export const getFinalEndPoint = <T extends CreateCourierEntranceType>(
 
 export const finalName = (
   name: CourierObjectType['name'],
-  queryParams?: CallBackArgsType['queryParams'],
+  queryParams?: Record<any, any>,
   urlParams?: CallBackArgsType['urlParams'],
-) =>
-  _.isFunction(name)
-    ? (name as FunctionType)({
-        ...queryParams,
-        ...urlParams,
-      })
-    : name
+) => {
+  if (_.isFunction(name)) {
+    return (name as FunctionType)({
+      ...queryParams,
+      ...urlParams,
+    })
+  } else {
+    return name
+  }
+}
 
 export const finalQueryParams = (
-  queryParams: CourierObjectType['queryParams'],
-  argQueryParams: CallBackArgsType['queryParams'],
-) => (_.isFunction(queryParams) ? (queryParams as FunctionType)(argQueryParams) : queryParams)
+  staticQueryParams: Record<any, any> | FunctionType,
+  dynamicQueryParams: Record<any, any>,
+) => {
+  if (dynamicQueryParams) {
+    if (staticQueryParams) {
+      if (_.isFunction(staticQueryParams)) {
+        return { ...dynamicQueryParams, ...(staticQueryParams as FunctionType)(dynamicQueryParams) }
+      } else {
+        return { ...dynamicQueryParams, ...staticQueryParams }
+      }
+    } else {
+      return dynamicQueryParams
+    }
+  } else {
+    if (staticQueryParams) {
+      return staticQueryParams
+    } else {
+      return {}
+    }
+  }
+}
 
 export const defaultDto = <Data>(data: Data): DTONested<Data> => {
   if (_.isArray(data)) {

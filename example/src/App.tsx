@@ -1,16 +1,32 @@
 import React, { FunctionComponent } from 'react'
-import { usePOSTPost } from './api/post'
+import { useGETPost, usePOSTPost } from './api/post'
 
 interface AppPropsType {}
 
 export const App: FunctionComponent<AppPropsType> = () => {
-  const { data, isLoading } = usePOSTPost()
+  const { isLoading, data } = useGETPost({
+    queryParams: {
+      name: 'Erfaaaan',
+    },
+    options: {
+      onSuccess: (data) => console.log(data),
+    },
+    urlParams: {
+      postId: 2,
+    },
+  })
+
+  const { mutate } = usePOSTPost()
+
+  const onRequestHandler = () => {
+    mutate({ age: 13 })
+  }
+
   if (isLoading) return <div>Loading...</div>
   return (
     <div>
-      {data?.map((item) => (
-        <p key={item.title}>{item.title}</p>
-      ))}
+      <button onClick={onRequestHandler}>Request</button>
+      <div>{JSON.stringify(data)}</div>
     </div>
   )
 }
