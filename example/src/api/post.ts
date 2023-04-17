@@ -1,12 +1,6 @@
 import { CreateApi, CourierTypeHelper } from 'react-courier'
 
 type useGetPostType = CourierTypeHelper<{
-  dynamicQueryParams: {
-    name: string
-  }
-  staticQueryParams: {
-    age: number
-  }
   applyDefaultDto: true
   endPointArgs: {
     postId: string
@@ -21,10 +15,6 @@ export const useGETPost = CreateApi<useGetPostType>({
   endPoint: ({ postId }) => `/posts/${postId}`,
   name: ['GET', 'posts'],
   method: 'GET',
-  queryParams: ({ name }) => ({
-    name: name + 'mamad',
-    age: 12,
-  }),
   options: {
     applyDefaultDto: true,
     onSuccess: (data) => console.log(data),

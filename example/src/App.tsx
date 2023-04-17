@@ -5,9 +5,6 @@ interface AppPropsType {}
 
 export const App: FunctionComponent<AppPropsType> = () => {
   const { isLoading, data } = useGETPost({
-    queryParams: {
-      name: 'Erfaaaan',
-    },
     options: {
       onSuccess: (data) => console.log(data),
     },
