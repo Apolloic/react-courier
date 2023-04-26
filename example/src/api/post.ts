@@ -27,6 +27,9 @@ type usePOSTPostType = CourierTypeHelper<{
   dynamicRequestData: {
     age: number
   }
+  dynamicQueryParams: {
+    name: string
+  }
   staticRequestData: {
     name: string
   }
@@ -42,5 +45,10 @@ export const usePOSTPost = CreateApi<usePOSTPostType>({
   method: 'POST',
   requestData: {
     name: 'erfan',
+  },
+  queryParams: ({ name }) => {
+    return {
+      name: name + 'react-courier',
+    }
   },
 })

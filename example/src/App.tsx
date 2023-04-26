@@ -13,7 +13,11 @@ export const App: FunctionComponent<AppPropsType> = () => {
     },
   })
 
-  const { mutate } = usePOSTPost()
+  const { mutate } = usePOSTPost({
+    queryParams: {
+      name: 'hi',
+    },
+  })
 
   const onRequestHandler = () => {
     mutate({ age: 13 })
