@@ -89,7 +89,7 @@ type CourierObjectTypeQueryParams<T extends CreateCourierEntranceType> = T['stat
     }
   : T['dynamicQueryParams'] extends {}
   ? {
-      queryParams: QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>
+      queryParams?: QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>
     }
   : {}
 
