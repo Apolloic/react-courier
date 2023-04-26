@@ -1,4 +1,10 @@
-import _ from 'lodash'
+import isFunction from 'lodash/isFunction'
+import isArray from 'lodash/isArray'
+import isObject from 'lodash/isObject'
+import camelCase from 'lodash/camelCase'
+import map from 'lodash/map'
+import mapKeys from 'lodash/mapKeys'
+import mapValues from 'lodash/mapValues'
 
 import {
   CallBackArgsType,
@@ -14,9 +20,9 @@ export const getFinalEndPoint = <T extends CreateCourierEntranceType>(
   urlParams?: Record<keyof T['endPointArgs'], string | number>,
 ) => {
   if (urlParams) {
-    return _.isFunction(endPoint) ? (endPoint as FunctionType)(urlParams) : endPoint
+    return isFunction(endPoint) ? (endPoint as FunctionType)(urlParams) : endPoint
   } else {
-    return _.isFunction(endPoint) ? (endPoint as FunctionType)() : endPoint
+    return isFunction(endPoint) ? (endPoint as FunctionType)() : endPoint
   }
 }
 
@@ -25,7 +31,7 @@ export const finalName = (
   queryParams?: Record<any, any>,
   urlParams?: CallBackArgsType['urlParams'],
 ) => {
-  if (_.isFunction(name)) {
+  if (isFunction(name)) {
     return (name as FunctionType)({
       ...queryParams,
       ...urlParams,
@@ -41,7 +47,7 @@ export const finalQueryParams = (
 ) => {
   if (dynamicQueryParams) {
     if (staticQueryParams) {
-      if (_.isFunction(staticQueryParams)) {
+      if (isFunction(staticQueryParams)) {
         return { ...dynamicQueryParams, ...(staticQueryParams as FunctionType)(dynamicQueryParams) }
       } else {
         return { ...dynamicQueryParams, ...staticQueryParams }
@@ -59,15 +65,14 @@ export const finalQueryParams = (
 }
 
 export const defaultDto = <Data>(data: Data): DTONested<Data> => {
-  if (_.isArray(data)) {
-    return _.map(data, defaultDto) as DTONested<Data>
+  if (isArray(data)) {
+    return map(data, defaultDto) as DTONested<Data>
   }
 
-  if (_.isObject(data)) {
-    return _(data)
-      .mapKeys((_v, k) => _.camelCase(k))
-      .mapValues((v) => defaultDto(v))
-      .value() as DTONested<Data>
+  if (isObject(data)) {
+    const newObjKeys = mapKeys(data, (_value, key) => camelCase(key))
+    const newObjValues = mapValues(newObjKeys, (value) => defaultDto(value))
+    return newObjValues as DTONested<Data>
   }
 
   return data as DTONested<Data>
