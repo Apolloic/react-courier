@@ -1,10 +1,4 @@
-import isFunction from 'lodash/isFunction'
-import isArray from 'lodash/isArray'
-import isObject from 'lodash/isObject'
-import camelCase from 'lodash/camelCase'
-import map from 'lodash/map'
-import mapKeys from 'lodash/mapKeys'
-import mapValues from 'lodash/mapValues'
+import lodash from 'lodash'
 
 import {
   CallBackArgsType,
@@ -20,9 +14,9 @@ export const getFinalEndPoint = <T extends CreateCourierEntranceType>(
   urlParams?: Record<keyof T['endPointArgs'], string | number>,
 ) => {
   if (urlParams) {
-    return isFunction(endPoint) ? (endPoint as FunctionType)(urlParams) : endPoint
+    return lodash.isFunction(endPoint) ? (endPoint as FunctionType)(urlParams) : endPoint
   } else {
-    return isFunction(endPoint) ? (endPoint as FunctionType)() : endPoint
+    return lodash.isFunction(endPoint) ? (endPoint as FunctionType)() : endPoint
   }
 }
 
@@ -31,7 +25,7 @@ export const finalName = (
   queryParams?: Record<any, any>,
   urlParams?: CallBackArgsType['urlParams'],
 ) => {
-  if (isFunction(name)) {
+  if (lodash.isFunction(name)) {
     return (name as FunctionType)({
       ...queryParams,
       ...urlParams,
@@ -47,7 +41,7 @@ export const finalQueryParams = (
 ) => {
   if (dynamicQueryParams) {
     if (staticQueryParams) {
-      if (isFunction(staticQueryParams)) {
+      if (lodash.isFunction(staticQueryParams)) {
         return { ...dynamicQueryParams, ...(staticQueryParams as FunctionType)(dynamicQueryParams) }
       } else {
         return { ...dynamicQueryParams, ...staticQueryParams }
@@ -65,13 +59,13 @@ export const finalQueryParams = (
 }
 
 export const defaultDto = <Data>(data: Data): DTONested<Data> => {
-  if (isArray(data)) {
-    return map(data, defaultDto) as DTONested<Data>
+  if (lodash.isArray(data)) {
+    return lodash.map(data, defaultDto) as DTONested<Data>
   }
 
-  if (isObject(data)) {
-    const newObjKeys = mapKeys(data, (_value, key) => camelCase(key))
-    const newObjValues = mapValues(newObjKeys, (value) => defaultDto(value))
+  if (lodash.isObject(data)) {
+    const newObjKeys = lodash.mapKeys(data, (_value, key) => lodash.camelCase(key))
+    const newObjValues = lodash.mapValues(newObjKeys, (value) => defaultDto(value))
     return newObjValues as DTONested<Data>
   }
 
