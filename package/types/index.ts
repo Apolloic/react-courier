@@ -2,13 +2,6 @@ import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/r
 import { PropsWithChildren } from 'react'
 import { AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 
-export interface RegisterErrorDto {
-  // Register Error DTO
-}
-export interface RegisterOtherBaseUrls {
-  // Register Other Base Urls
-}
-
 export type FinalResponseData<T extends CreateCourierEntranceType> = T['responseDataAfterDto'] extends Record<any, any>
   ? T['responseDataAfterDto']
   : T['applyDefaultDto'] extends boolean
@@ -27,13 +20,6 @@ export type FinalOptionType<T extends CreateCourierEntranceType> = T['method'] e
 
 export type DTO<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<DTO<U>>}` : S
 
-export type Unpacked<T> = T extends (infer U)[] ? U : T
-
-export type QueryKeyType<T extends CreateCourierEntranceType> = {
-  queryParams: T['dynamicQueryParams']
-  urlParams: T['endPointArgs']
-}
-
 export type DTONested<T> = T extends Array<any>
   ? Array<DTONested<T[number]>>
   : T extends object
@@ -42,15 +28,19 @@ export type DTONested<T> = T extends Array<any>
     }
   : T
 
-export type ValueOf<T> = T[keyof T]
+export type Unpacked<T> = T extends (infer U)[] ? U : T
 
-export type CourierTypeHelper<T extends CreateCourierEntranceType> = T
-export type CourierMethodTypeHelper<T extends 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'> = T
+export type QueryKeyType<T extends CreateCourierEntranceType> = {
+  queryParams: T['dynamicQueryParams']
+  urlParams: T['endPointArgs']
+}
+
+export type ValueOf<T> = T[keyof T]
 
 export interface CreateCourierEntranceType {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  responseData?: Record<any, any> | unknown
   endPointArgs?: Record<any, any>
-  responseData: Record<any, any>
   staticQueryParams?: Record<any, any>
   dynamicQueryParams?: Record<any, any>
   responseDataAfterDto?: Record<any, any>
@@ -61,13 +51,13 @@ export interface CreateCourierEntranceType {
 
 export type EndPointFunction<T> = (params: T) => string
 
-export type QueryParamsType<S, D> = D extends {}
-  ? S extends {}
+export type QueryParamsType<S, D> = D extends Record<any, any>
+  ? S extends Record<any, any>
     ? ((args: Partial<D>) => S & Partial<D>) | S
     : (args: Partial<D>) => Partial<D>
   : S
 
-export type FinalQueryParams<S, D> = D extends {} ? S & D : S
+export type FinalQueryParams<S, D> = D extends Record<any, any> ? S & D : S
 
 type CourierObjectTypeDTO<T extends CreateCourierEntranceType> = T['responseDataAfterDto'] extends Record<any, any>
   ? {
@@ -79,15 +69,15 @@ type CourierObjectTypeDTO<T extends CreateCourierEntranceType> = T['responseData
 
 type CourierObjectTypeRequestData<T extends CreateCourierEntranceType> = T['method'] extends 'GET'
   ? {}
-  : T['staticRequestData'] extends {}
+  : T['staticRequestData'] extends Record<any, any>
   ? { requestData: T['staticRequestData'] }
   : {}
 
-type CourierObjectTypeQueryParams<T extends CreateCourierEntranceType> = T['staticQueryParams'] extends {}
+type CourierObjectTypeQueryParams<T extends CreateCourierEntranceType> = T['staticQueryParams'] extends Record<any, any>
   ? {
       queryParams: QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>
     }
-  : T['dynamicQueryParams'] extends {}
+  : T['dynamicQueryParams'] extends Record<any, any>
   ? {
       queryParams?: QueryParamsType<T['staticQueryParams'], T['dynamicQueryParams']>
     }
@@ -99,7 +89,7 @@ export type CourierObjectType<T extends CreateCourierEntranceType = CreateCourie
     | string[]
   baseUrl?: keyof RegisterOtherBaseUrls | 'default'
   method: T['method']
-  endPoint: T['endPointArgs'] extends {} ? EndPointFunction<T['endPointArgs']> : string
+  endPoint: T['endPointArgs'] extends Record<any, any> ? EndPointFunction<T['endPointArgs']> : string
   options?: FinalOptionType<T>
   headers?: Record<string, string>
   axiosAgentConfig?: axiosAgentConfigType
@@ -113,7 +103,7 @@ export type CallBackArgsType<T extends CreateCourierEntranceType = CreateCourier
   options?: T['method'] extends 'GET'
     ? UseQueryOptions<FinalResponseData<T>, RegisterErrorDto>
     : UseMutationOptions<FinalResponseData<T>, RegisterErrorDto>
-} & (T['dynamicQueryParams'] extends {} ? { queryParams: T['dynamicQueryParams'] } : {})
+} & (T['dynamicQueryParams'] extends Record<any, any> ? { queryParams: T['dynamicQueryParams'] } : {})
 
 export type RequestType<T extends CreateCourierEntranceType> = FinalQueryParams<
   T['staticQueryParams'],
@@ -165,4 +155,16 @@ export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig 
   data?: D
   queryParams?: Q
 }
+
 export type FunctionType = (data?: any) => any
+
+// Type Helper
+export type CourierTypeHelper<T extends CreateCourierEntranceType> = T
+export type CourierMethodTypeHelper<T extends 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'> = T
+
+export interface RegisterErrorDto {
+  // Register Error DTO
+}
+export interface RegisterOtherBaseUrls {
+  // Register Other Base Urls
+}
