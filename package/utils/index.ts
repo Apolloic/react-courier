@@ -1,32 +1,19 @@
 import lodash from 'lodash'
+import { DTONested } from '../types'
 
-import {
-  CallBackArgsType,
-  CreateCourierEntranceType,
-  DTONested,
-  EndPointFunction,
-  FunctionType,
-  CourierObjectType,
-} from '../types'
-
-export const getFinalEndPoint = <T extends CreateCourierEntranceType>(
-  endPoint: string | EndPointFunction<T['endPointArgs']>,
-  urlParams?: Record<keyof T['endPointArgs'], string | number>,
-) => {
-  if (urlParams) {
-    return lodash.isFunction(endPoint) ? (endPoint as FunctionType)(urlParams) : endPoint
-  } else {
-    return lodash.isFunction(endPoint) ? (endPoint as FunctionType)() : endPoint
-  }
+export function getFinalEndPoint<TUrlParams, TEndPoint>(endPoint: TEndPoint, urlParams?: TUrlParams): string {
+  return urlParams
+    ? lodash.isFunction(endPoint)
+      ? endPoint(urlParams)
+      : endPoint
+    : lodash.isFunction(endPoint)
+    ? endPoint()
+    : endPoint
 }
 
-export const finalName = (
-  name: CourierObjectType['name'],
-  queryParams?: Record<any, any>,
-  urlParams?: CallBackArgsType['urlParams'],
-) => {
+export const getFinalName = <TName, TQP, TUP>(name: TName, queryParams: TQP, urlParams: TUP) => {
   if (lodash.isFunction(name)) {
-    return (name as FunctionType)({
+    return name({
       ...queryParams,
       ...urlParams,
     })
@@ -35,19 +22,16 @@ export const finalName = (
   }
 }
 
-export const finalQueryParams = (
-  staticQueryParams: Record<any, any> | FunctionType,
-  dynamicQueryParams: Record<any, any>,
-) => {
-  if (dynamicQueryParams) {
+export const getFinalQueryParams = <TSQP, TDQP>(staticQueryParams: TSQP, queryParamsFromHook: TDQP) => {
+  if (queryParamsFromHook) {
     if (staticQueryParams) {
       if (lodash.isFunction(staticQueryParams)) {
-        return { ...dynamicQueryParams, ...(staticQueryParams as FunctionType)(dynamicQueryParams) }
+        return { ...queryParamsFromHook, ...staticQueryParams(queryParamsFromHook) }
       } else {
-        return { ...dynamicQueryParams, ...staticQueryParams }
+        return { ...queryParamsFromHook, ...staticQueryParams }
       }
     } else {
-      return dynamicQueryParams
+      return queryParamsFromHook
     }
   } else {
     if (staticQueryParams) {

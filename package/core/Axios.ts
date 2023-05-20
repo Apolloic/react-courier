@@ -1,6 +1,26 @@
-import axios, { AxiosInstance, AxiosResponse, CreateAxiosDefaults } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { defaultDto } from '../utils'
-import { BaseUrlType, ConstructorArgsType, RequestConfigType } from '../types'
+import { RegisterErrorDto } from '../types'
+
+type MultipleBaseUrlType = Record<string, string>
+export type BaseUrlType = string | MultipleBaseUrlType
+
+export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig {
+  data?: D
+  queryParams?: Q
+}
+
+export interface ConstructorArgsType<BaseUrl> {
+  baseUrl?: BaseUrl
+  axiosAgentConfig: CreateAxiosDefaults<any>
+  timeout: number
+  options?: {
+    hasDefaultDto?: boolean
+    commonErrorDto?: (error: any) => RegisterErrorDto
+    exteraDto?: (data: any) => any
+  }
+  publicHeaders?: any
+}
 
 export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
   public baseUrl?: BaseUrl
@@ -22,13 +42,13 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
     })
   }
 
-  async request<ResponseType = any, QueryParamsType = any, RequestDataType = any>(
+  async request<ResponseData = any, QueryParamsType = any, RequestDataType = any>(
     url: string,
     configs?: RequestConfigType<RequestDataType, QueryParamsType>,
     middleware?: (data: AxiosResponse) => void,
   ) {
     try {
-      let response: AxiosResponse<ResponseType>
+      let response: AxiosResponse<ResponseData>
       switch (configs?.method) {
         case 'POST':
           response = await this.agent.post(url, configs.data)

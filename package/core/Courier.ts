@@ -1,108 +1,117 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useContext } from 'react'
+import { CourierContext } from '../providers/CourierContextProvider'
 import {
+  CourierObjectType,
+  CreateCourierEntranceType,
+  FinalQueryParams,
+  FinalRequestData,
+  FinalResponseData,
+  HookArgs,
+  MethodTypes,
+  QueryKeyType,
+  RegisterErrorDto,
+} from '../types'
+import { Axios } from './Axios'
+import { getFinalEndPoint, getFinalName, getFinalQueryParams } from '../utils'
+import {
+  UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
   UseQueryResult,
   useMutation,
   useQuery,
-  UseQueryOptions,
-  UseMutationOptions,
 } from '@tanstack/react-query'
-import {
-  CallBackArgsType,
-  CreateCourierEntranceType,
-  FinalResponseData,
-  QueryKeyType,
-  RegisterErrorDto,
-  RequestConfigType,
-  RequestType,
-  CourierObjectType,
-} from '../types'
-import { finalName, finalQueryParams, getFinalEndPoint } from '../utils'
-import { Axios } from './Axios'
-import { CourierContext } from '../providers/CourierContextProvider'
 
-export const CreateApi = <T extends CreateCourierEntranceType>(CourierObject: CourierObjectType<T>) => {
-  const useCustom = (args?: CallBackArgsType<T>) => {
-    const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, middleware, axiosAgentConfig } =
-      useContext(CourierContext)
+export const CreateApi =
+  <TArgs extends CreateCourierEntranceType>() =>
+  <TMethod extends MethodTypes, TApplyDefaultDto extends boolean>(
+    CourierObject: CourierObjectType<TArgs, TMethod, TApplyDefaultDto>,
+  ) => {
+    const { method, config, baseUrl, dto, endPoint, queryParams, name } = CourierObject
+    const useCustomHook = (hookArgs?: HookArgs<TMethod, TApplyDefaultDto, TArgs>) => {
+      const { defaultBaseUrl, otherBaseUrl, commonErrorDto, headers, timeout, axiosAgentConfig, middleware } =
+        useContext(CourierContext)
 
-    const options = {
-      commonErrorDto: commonErrorDto,
-      exteraDto: (CourierObject as any).dto,
-      hasDefaultDto: (CourierObject?.options as any)?.applyDefaultDto ?? false,
-    }
+      const options = {
+        commonErrorDto: commonErrorDto,
+        exteraDto: dto,
+        hasDefaultDto: config?.applyDefaultDto ?? false,
+      }
 
-    const Courier = new Axios({
-      timeout: CourierObject.timeout ? CourierObject.timeout : timeout ?? 5,
-      publicHeaders: { ...headers, ...CourierObject.headers },
-      axiosAgentConfig: { ...axiosAgentConfig, ...CourierObject.axiosAgentConfig },
-      baseUrl: CourierObject.baseUrl
-        ? CourierObject.baseUrl !== 'default'
-          ? otherBaseUrl?.[CourierObject.baseUrl]
-          : defaultBaseUrl
-        : defaultBaseUrl,
-      options,
-    })
+      const Courier = new Axios({
+        timeout: config?.timeout ? config?.timeout : timeout ?? 5,
+        publicHeaders: { ...headers, ...config?.headers },
+        axiosAgentConfig: { ...axiosAgentConfig, ...config?.axiosAgentConfig },
+        baseUrl: baseUrl ? (baseUrl !== 'default' ? otherBaseUrl?.[baseUrl] : defaultBaseUrl) : defaultBaseUrl,
+        options,
+      })
 
-    const endPoint = getFinalEndPoint<T>(CourierObject.endPoint, args?.urlParams)
-    const configs: RequestConfigType<
-      T['responseDataAfterDto'],
-      T['dynamicQueryParams'] extends {} ? T['staticQueryParams'] & T['dynamicQueryParams'] : T['staticQueryParams']
-    > = {
-      method: CourierObject.method,
-      queryParams: finalQueryParams((CourierObject as any)?.queryParams, (args as any)?.queryParams),
-    }
+      const finalEndPoint = getFinalEndPoint(endPoint, hookArgs?.urlParams)
 
-    let result
-    if (CourierObject.method !== 'GET') {
-      result = useMutation(
-        finalName(CourierObject.name, (args as any)?.queryParams, args?.urlParams),
-        async (data: T['dynamicRequestData']) => {
-          return Courier.request<T['responseDataAfterDto'], RequestType<T>>(
-            endPoint,
-            {
-              method: CourierObject.method,
-              data: {
-                ...(CourierObject as any).requestData,
-                ...data,
+      const finalAxiosConfigs = {
+        method: method,
+        queryParams: getFinalQueryParams(queryParams, hookArgs?.queryParams),
+      }
+
+      const finalNameForCatch = getFinalName(name, hookArgs?.queryParams, hookArgs?.urlParams)
+
+      let result
+      if (method !== 'GET') {
+        result = useMutation(
+          finalNameForCatch,
+          async (data: TArgs['dynamicRequestData']) => {
+            return Courier.request<
+              FinalResponseData<TApplyDefaultDto, TArgs>,
+              FinalQueryParams<TArgs['staticQueryParams'], TArgs['dynamicQueryParams']>,
+              FinalRequestData<TArgs['staticRequestData'], TArgs['dynamicRequestData']>
+            >(
+              finalEndPoint,
+              {
+                data: {
+                  ...(CourierObject as { requestData: TArgs['staticRequestData'] }).requestData,
+                  ...data,
+                } as FinalRequestData<TArgs['staticRequestData'], TArgs['dynamicRequestData']>,
+                ...finalAxiosConfigs,
               },
-              ...configs,
-            },
-            middleware,
-          )
-        },
-        {
-          ...(CourierObject?.options as UseMutationOptions<
-            T['responseDataAfterDto'],
-            RegisterErrorDto,
-            T['dynamicRequestData']
-          >),
-          ...(args?.options as UseMutationOptions<
-            T['responseDataAfterDto'],
-            RegisterErrorDto,
-            T['dynamicRequestData']
-          >),
-        },
-      )
-    } else {
-      result = useQuery(
-        finalName(CourierObject.name, (args as any)?.queryParams, args?.urlParams),
-        async () => {
-          const data = Courier.request<FinalResponseData<T>, RequestType<T>>(endPoint, configs, middleware)
-          return data
-        },
-        {
-          ...(CourierObject?.options as UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>),
-          ...(args?.options as UseQueryOptions<T['responseDataAfterDto'], RegisterErrorDto>),
-        },
-      )
-    }
+              middleware,
+            )
+          },
+          {
+            ...(config?.tanStackOptions as UseMutationOptions<
+              TArgs['responseDataAfterDto'],
+              RegisterErrorDto,
+              TArgs['dynamicRequestData']
+            >),
+            ...(hookArgs?.options as UseMutationOptions<
+              TArgs['responseDataAfterDto'],
+              RegisterErrorDto,
+              TArgs['dynamicRequestData']
+            >),
+          },
+        )
+      } else {
+        result = useQuery(
+          finalNameForCatch,
+          async () => {
+            const data = Courier.request<
+              FinalResponseData<TApplyDefaultDto, TArgs>,
+              FinalQueryParams<TArgs['staticQueryParams'], TArgs['dynamicQueryParams']>,
+              FinalRequestData<TArgs['staticRequestData'], TArgs['dynamicRequestData']>
+            >(finalEndPoint, finalAxiosConfigs, middleware)
+            return data
+          },
+          {
+            ...(config?.tanStackOptions as UseQueryOptions<TArgs['responseDataAfterDto'], RegisterErrorDto>),
+            ...(hookArgs?.options as UseQueryOptions<TArgs['responseDataAfterDto'], RegisterErrorDto>),
+          },
+        )
+      }
 
-    return result as T['method'] extends 'GET'
-      ? UseQueryResult<FinalResponseData<T>, RegisterErrorDto>
-      : UseMutationResult<FinalResponseData<T>, RegisterErrorDto, T['dynamicRequestData']>
+      return result as TMethod extends 'GET'
+        ? UseQueryResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
+        : UseMutationResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto, TArgs['dynamicRequestData']>
+    }
+    useCustomHook.getQueryKey = (args: QueryKeyType<TArgs>) => getFinalName(name, args.queryParams, args.urlParams)
+    return useCustomHook
   }
-  useCustom.getQueryKey = (args: QueryKeyType<T>) => finalName(CourierObject.name, args?.queryParams, args?.urlParams)
-  return useCustom
-}

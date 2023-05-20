@@ -1,54 +1,36 @@
-import { CreateApi, CourierTypeHelper } from 'react-courier'
+import { CourierTypeHelper, CreateApi } from 'react-courier'
 
-type useGetPostType = CourierTypeHelper<{
-  applyDefaultDto: true
+type UseGetPostApiType = CourierTypeHelper<{
   endPointArgs: {
-    postId: string
+    postId: number
   }
-  method: 'GET'
   responseData: {
-    first_name: string
-  }[]
+    body_admin: string
+    id_admin: 1
+    title_admin: string
+    userId_admin: string
+  }
+  responseDataAfterDto: {
+    name: string
+    id: 1
+    title: string
+    user: string
+  }
 }>
 
-export const useGETPost = CreateApi<useGetPostType>({
-  endPoint: ({ postId }) => `/posts/${postId}`,
-  name: ['GET', 'posts'],
-  method: 'GET',
-  options: {
-    applyDefaultDto: true,
-    onSuccess: (data) => console.log(data),
-  },
-})
-
-// ==================== POST REQUEST =========================
-
-type usePOSTPostType = CourierTypeHelper<{
-  dynamicRequestData: {
-    age: number
-  }
-  dynamicQueryParams: {
-    name: string
-  }
-  staticRequestData: {
-    name: string
-  }
-  method: 'POST'
-  responseData: {
-    test: string
-  }[]
-}>
-
-export const usePOSTPost = CreateApi<usePOSTPostType>({
-  endPoint: '/posts',
-  name: ['POST', 'posts'],
-  method: 'POST',
-  requestData: {
-    name: 'erfan',
-  },
-  queryParams: ({ name }) => {
+export const useGetPost = CreateApi<UseGetPostApiType>()({
+  name: ['salam'],
+  endPoint: () => '/posts',
+  dto: ({ bodyAdmin, idAdmin, titleAdmin, userIdAdmin }) => {
     return {
-      name: name + 'react-courier',
+      id: idAdmin,
+      name: 'test',
+      title: 'test',
+      user: 'test',
     }
+  },
+  method: 'GET',
+  config: {
+    applyDefaultDto: true,
   },
 })
