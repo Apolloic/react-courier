@@ -1,60 +1,6 @@
-// import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
-// import { PropsWithChildren } from 'react'
-// import { AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
-
 import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { PropsWithChildren } from 'react'
-
-// export type TMethodTypes = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-// export interface CreateCourierEntranceType {
-//   responseData?: Record<any, any> | unknown
-//   responseDataAfterDto?: Record<any, any>
-//   staticQueryParams?: Record<any, any>
-//   dynamicQueryParams?: Record<any, any>
-//   dynamicRequestData?: Record<any, any>
-//   staticRequestData?: Record<any, any>
-//   endPointArgs?: Record<any, any>
-// }
-
-// export type CourierObjectType<
-//   TMethod extends TMethodTypes,
-//   TConfig extends boolean,
-//   T extends CreateCourierEntranceType = CreateCourierEntranceType,
-// > = {
-//   name:
-//     | ((args: T['endPointArgs'] & T['dynamicQueryParams'] & T['staticQueryParams']) => (string | number | boolean)[])
-//     | string[]
-//   baseUrl?: keyof RegisterOtherBaseUrls | 'default'
-//   method: TMethod
-//   endPoint: T['endPointArgs'] extends Record<any, any> ? EndPointFunction<T['endPointArgs']> : string
-//   options?: FinalOptionType<TMethod, T>
-//   headers?: Record<string, string>
-//   axiosAgentConfig?: axiosAgentConfigType
-//   timeout?: number
-// } & CourierObjectTypeRequestData<T> &
-//   CourierObjectTypeDTO<T> &
-//   CourierObjectTypeQueryParams<T>
-
-// export type Unpacked<T> = T extends (infer U)[] ? U : T
-
-// export type ValueOf<T> = T[keyof T]
-
-// export type CallBackArgsType<T extends CreateCourierEntranceType = CreateCourierEntranceType> = {
-//   urlParams?: Record<keyof T['endPointArgs'], string | number>
-//   options?: T['method'] extends 'GET'
-//     ? UseQueryOptions<FinalResponseData<T>, RegisterErrorDto>
-//     : UseMutationOptions<FinalResponseData<T>, RegisterErrorDto>
-// } & (T['dynamicQueryParams'] extends Record<any, any> ? { queryParams: T['dynamicQueryParams'] } : {})
-
-// export interface RequestConfigType<D = any, Q = any> extends AxiosRequestConfig {
-//   data?: D
-//   queryParams?: Q
-// }
-
-// export type FunctionType = (data?: any) => any
-
-// // Type Helper
 
 // New Version
 
@@ -236,7 +182,6 @@ export type HookArgs<
 } & (TArgs['dynamicQueryParams'] extends Record<any, any>
   ? { queryParams: TArgs['dynamicQueryParams'] }
   : { queryParams?: unknown })
-
 // Providers
 
 export type MiddelwareType = (data: AxiosResponse<any, any>) => void
@@ -267,4 +212,3 @@ export type QueryKeyType<T extends CreateCourierEntranceType> = {
   queryParams: T['dynamicQueryParams']
   urlParams: T['endPointArgs']
 }
-export type CourierTypeHelper<T extends CreateCourierEntranceType> = T

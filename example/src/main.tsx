@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from '@/App'
-import { CourierProvider } from 'react-courier'
+import { CourierDevtools, CourierProvider } from 'react-courier'
 
 declare module 'react-courier/types' {
   interface RegisterOtherBaseUrls {
@@ -11,27 +11,28 @@ declare module 'react-courier/types' {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <CourierProvider
-    otherBaseUrl={{
-      test: 'salam',
-    }}
-    defaultOptions={{
-      axiosAgentConfig: {
-        withCredentials: true,
-      },
-      queries: {
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: true,
-        refetchOnMount: false,
-      },
-    }}
-    middleware={(response) => {
-      console.log(response)
-    }}
-    defaultBaseUrl='https://jsonplaceholder.typicode.com/'
-  >
-    <React.StrictMode>
+  <React.StrictMode>
+    <CourierProvider
+      otherBaseUrl={{
+        test: 'salam',
+      }}
+      defaultOptions={{
+        axiosAgentConfig: {
+          withCredentials: true,
+        },
+        queries: {
+          refetchOnWindowFocus: false,
+          refetchOnReconnect: true,
+          refetchOnMount: false,
+        },
+      }}
+      middleware={(response) => {
+        console.log(response)
+      }}
+      defaultBaseUrl='https://jsonplaceholder.typicode.com/'
+    >
       <App />
-    </React.StrictMode>
-  </CourierProvider>,
+      <CourierDevtools />
+    </CourierProvider>
+  </React.StrictMode>,
 )

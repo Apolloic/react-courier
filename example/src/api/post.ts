@@ -1,6 +1,6 @@
-import { CourierTypeHelper, CreateApi } from 'react-courier'
+import { CreateApi } from 'react-courier'
 
-type UseGetPostApiType = CourierTypeHelper<{
+type UseGetPostApiType = {
   endPointArgs: {
     postId: number
   }
@@ -16,21 +16,26 @@ type UseGetPostApiType = CourierTypeHelper<{
     title: string
     user: string
   }
-}>
+  dynamicQueryParams: {
+    name: string
+    ss: number
+  }
+}
 
-export const useGetPost = CreateApi<UseGetPostApiType>()({
-  name: ['salam'],
+const GetPostFetch = CreateApi<UseGetPostApiType>()
+export const useGetPost = GetPostFetch({
+  name: ({ postId, name, ss }) => ['salam', name, ss],
   endPoint: () => '/posts',
-  dto: ({ bodyAdmin, idAdmin, titleAdmin, userIdAdmin }) => {
+  dto: ({ body_admin, id_admin, title_admin, userId_admin }) => {
     return {
-      id: idAdmin,
-      name: 'test',
-      title: 'test',
-      user: 'test',
+      id: 1,
+      name: 'sss',
+      title: 'sss',
+      user: 'ssss',
     }
   },
-  method: 'GET',
   config: {
-    applyDefaultDto: true,
+    applyDefaultDto: false,
   },
+  method: 'GET',
 })

@@ -5,6 +5,10 @@ interface AppPropsType {}
 
 export const App: FunctionComponent<AppPropsType> = () => {
   const { data, isLoading } = useGetPost({
+    queryParams: {
+      ss: 0,
+      name: '',
+    },
     urlParams: {
       postId: 1,
     },

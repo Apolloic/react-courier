@@ -25,7 +25,7 @@ import {
 
 export const CreateApi =
   <TArgs extends CreateCourierEntranceType>() =>
-  <TMethod extends MethodTypes, TApplyDefaultDto extends boolean>(
+  <TMethod extends MethodTypes = 'GET', TApplyDefaultDto extends boolean = false>(
     CourierObject: CourierObjectType<TArgs, TMethod, TApplyDefaultDto>,
   ) => {
     const { method, config, baseUrl, dto, endPoint, queryParams, name } = CourierObject
@@ -55,7 +55,8 @@ export const CreateApi =
       }
 
       const finalNameForCatch = getFinalName(name, hookArgs?.queryParams, hookArgs?.urlParams)
-
+        .map(String)
+        .filter(Boolean)
       let result
       if (method !== 'GET') {
         result = useMutation(
@@ -112,6 +113,7 @@ export const CreateApi =
         ? UseQueryResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
         : UseMutationResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto, TArgs['dynamicRequestData']>
     }
-    useCustomHook.getQueryKey = (args: QueryKeyType<TArgs>) => getFinalName(name, args.queryParams, args.urlParams)
+    useCustomHook.getQueryKey = (args: QueryKeyType<TArgs>) =>
+      getFinalName(name, args.queryParams, args.urlParams).map(String).filter(Boolean)
     return useCustomHook
   }
