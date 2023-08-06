@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { defaultDto } from '../utils'
-import { RegisterErrorDto } from '../types'
+import { RegisterErrorDto } from '..'
 
 type MultipleBaseUrlType = Record<string, string>
 export type BaseUrlType = string | MultipleBaseUrlType

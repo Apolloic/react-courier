@@ -10,7 +10,6 @@ import {
   HookArgs,
   MethodTypes,
   QueryKeyType,
-  RegisterErrorDto,
 } from '../types'
 import { Axios } from './Axios'
 import { getFinalEndPoint, getFinalName, getFinalQueryParams } from '../utils'
@@ -22,6 +21,7 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query'
+import { RegisterErrorDto } from '..'
 
 export const CreateApi =
   <TArgs extends CreateCourierEntranceType>() =>
