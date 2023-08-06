@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { App } from '@/App'
 import { CourierDevtools, CourierProvider } from 'react-courier'
 
-declare module 'react-courier/types' {
+declare module 'react-courier' {
   interface RegisterOtherBaseUrls {
     test: string
   }
@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <CourierProvider
       otherBaseUrl={{
-        test: 'salam',
+        test: 'fff',
       }}
       defaultOptions={{
         axiosAgentConfig: {

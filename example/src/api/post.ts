@@ -22,8 +22,7 @@ type UseGetPostApiType = {
   }
 }
 
-const GetPostFetch = CreateApi<UseGetPostApiType>()
-export const useGetPost = GetPostFetch({
+export const useGetPost = CreateApi<UseGetPostApiType>()({
   name: ({ postId, name, ss }) => ['salam', name, ss],
   endPoint: () => '/posts',
   dto: ({ body_admin, id_admin, title_admin, userId_admin }) => {

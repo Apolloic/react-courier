@@ -1,15 +1,7 @@
 import { DefaultOptions, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { AxiosResponse, CreateAxiosDefaults } from 'axios'
 import { PropsWithChildren } from 'react'
-
-// New Version
-
-export interface RegisterErrorDto {
-  // Register Error DTO
-}
-export interface RegisterOtherBaseUrls {
-  // Register Other Base Urls
-}
+import { RegisterErrorDto, RegisterOtherBaseUrls } from '..'
 
 export interface CreateCourierEntranceType {
   responseData?: Record<any, any> | unknown
