@@ -79,7 +79,11 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
           return defaultDto(response.data as ResponseType)
         }
       } else {
-        return response.data as ResponseType
+        if (this.options?.exteraDto) {
+          return this.options?.exteraDto(defaultDto(response.data as ResponseType))
+        } else {
+          return response.data as ResponseType
+        }
       }
     } catch (error) {
       return Promise.reject(this.options?.commonErrorDto ? this.options?.commonErrorDto(error) : error)
