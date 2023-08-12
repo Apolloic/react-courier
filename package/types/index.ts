@@ -86,13 +86,13 @@ export type FinalOptionType<
   TArgs extends CreateCourierEntranceType,
 > = TMethod extends 'GET'
   ? TApplyDefaultDto extends boolean
-    ? { applyDefaultDto: TApplyDefaultDto } & UseQueryOptions<
+    ? { applyDefaultDto?: TApplyDefaultDto } & UseQueryOptions<
         FinalResponseData<TApplyDefaultDto, TArgs>,
         RegisterErrorDto
       >
     : UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
   : TApplyDefaultDto extends boolean
-  ? { applyDefaultDto: TApplyDefaultDto } & UseMutationOptions<
+  ? { applyDefaultDto?: TApplyDefaultDto } & UseMutationOptions<
       FinalResponseData<TApplyDefaultDto, TArgs>,
       RegisterErrorDto
     >
@@ -165,6 +165,7 @@ export type HookArgs<
   TApplyDefaultDto extends boolean,
   TArgs extends CreateCourierEntranceType,
 > = {
+  headers?: Record<string, string>
   urlParams?: TArgs['endPointArgs'] extends Record<any, any>
     ? Record<keyof TArgs['endPointArgs'], string | number>
     : unknown

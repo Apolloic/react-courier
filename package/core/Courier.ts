@@ -41,7 +41,7 @@ export const CreateApi =
 
       const Courier = new Axios({
         timeout: config?.timeout ? config?.timeout : timeout ?? 5,
-        publicHeaders: { ...headers, ...config?.headers },
+        publicHeaders: { ...headers, ...config?.headers, ...hookArgs?.headers },
         axiosAgentConfig: { ...axiosAgentConfig, ...config?.axiosAgentConfig },
         baseUrl: baseUrl ? (baseUrl !== 'default' ? otherBaseUrl?.[baseUrl] : defaultBaseUrl) : defaultBaseUrl,
         options,
