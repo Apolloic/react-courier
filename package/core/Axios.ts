@@ -80,7 +80,7 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
         }
       } else {
         if (this.options?.exteraDto) {
-          return this.options?.exteraDto(defaultDto(response.data as ResponseType))
+          return this.options?.exteraDto(response.data as ResponseType)
         } else {
           return response.data as ResponseType
         }
