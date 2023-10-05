@@ -51,16 +51,25 @@ export class Axios<BaseUrl extends BaseUrlType = BaseUrlType> {
       let response: AxiosResponse<ResponseData>
       switch (configs?.method) {
         case 'POST':
-          response = await this.agent.post(url, configs.data)
+          response = await this.agent.post(url, configs.data, {
+            params: configs?.queryParams,
+          })
           break
         case 'DELETE':
-          response = await this.agent.delete(url)
+          response = await this.agent.delete(url, {
+            params: configs?.queryParams,
+            data: configs.data,
+          })
           break
         case 'PATCH':
-          response = await this.agent.patch(url, configs.data)
+          response = await this.agent.patch(url, configs.data, {
+            params: configs?.queryParams,
+          })
           break
         case 'PUT':
-          response = await this.agent.put(url, configs.data)
+          response = await this.agent.put(url, configs.data, {
+            params: configs?.queryParams,
+          })
           break
         case 'GET':
         default:

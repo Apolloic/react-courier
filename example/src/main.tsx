@@ -20,11 +20,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         axiosAgentConfig: {
           withCredentials: true,
         },
-        queries: {
-          refetchOnWindowFocus: false,
-          refetchOnReconnect: true,
-          refetchOnMount: false,
-        },
       }}
       middleware={(response) => {
         console.log(response)

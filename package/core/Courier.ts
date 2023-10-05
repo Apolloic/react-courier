@@ -7,6 +7,7 @@ import {
   FinalQueryParams,
   FinalRequestData,
   FinalResponseData,
+  GetHookArgsWithQueryParams,
   HookArgs,
   MethodTypes,
   QueryKeyType,
@@ -25,7 +26,7 @@ import { RegisterErrorDto } from '..'
 
 export const CreateApi =
   <TArgs extends CreateCourierEntranceType>() =>
-  <TMethod extends MethodTypes = 'GET', TApplyDefaultDto extends boolean = false>(
+  <TMethod extends MethodTypes, TApplyDefaultDto extends boolean = false>(
     CourierObject: CourierObjectType<TArgs, TMethod, TApplyDefaultDto>,
   ) => {
     const { method, config, baseUrl, dto, endPoint, queryParams, name } = CourierObject
@@ -47,21 +48,46 @@ export const CreateApi =
         options,
       })
 
-      const finalEndPoint = getFinalEndPoint(endPoint, hookArgs?.urlParams)
+      let finalEndPoint: any
+      let finalAxiosConfigs: any
+      let finalNameForCatch
 
-      const finalAxiosConfigs = {
-        method: method,
-        queryParams: getFinalQueryParams(queryParams, hookArgs?.queryParams),
+      if (method === 'GET') {
+        finalEndPoint = getFinalEndPoint(
+          endPoint,
+          (hookArgs as GetHookArgsWithQueryParams<TApplyDefaultDto, TArgs>)?.urlParams,
+        )
+        finalAxiosConfigs = {
+          method: method,
+          queryParams: getFinalQueryParams(
+            queryParams,
+            (hookArgs as GetHookArgsWithQueryParams<TApplyDefaultDto, TArgs>)?.queryParams,
+          ),
+        }
+
+        finalNameForCatch = getFinalName(
+          name,
+          (hookArgs as GetHookArgsWithQueryParams<TApplyDefaultDto, TArgs>)?.queryParams,
+          (hookArgs as GetHookArgsWithQueryParams<TApplyDefaultDto, TArgs>)?.urlParams,
+        )
+          .map(String)
+          .filter(Boolean)
       }
 
-      const finalNameForCatch = getFinalName(name, hookArgs?.queryParams, hookArgs?.urlParams)
-        .map(String)
-        .filter(Boolean)
       let result
       if (method !== 'GET') {
         result = useMutation(
-          finalNameForCatch,
-          async (data: TArgs['dynamicRequestData']) => {
+          name as string[],
+          async (mutateData: {
+            requestData: TArgs['dynamicRequestData']
+            queryParams: TArgs['dynamicQueryParams']
+            urlParams: TArgs['endPointArgs']
+          }) => {
+            finalEndPoint = getFinalEndPoint(endPoint, mutateData.urlParams)
+            finalAxiosConfigs = {
+              method: method,
+              queryParams: getFinalQueryParams(queryParams, mutateData?.queryParams),
+            }
             return Courier.request<
               FinalResponseData<TApplyDefaultDto, TArgs>,
               FinalQueryParams<TArgs['staticQueryParams'], TArgs['dynamicQueryParams']>,
@@ -71,7 +97,7 @@ export const CreateApi =
               {
                 data: {
                   ...(CourierObject as { requestData: TArgs['staticRequestData'] }).requestData,
-                  ...data,
+                  ...mutateData.requestData,
                 } as FinalRequestData<TArgs['staticRequestData'], TArgs['dynamicRequestData']>,
                 ...finalAxiosConfigs,
               },
@@ -111,7 +137,15 @@ export const CreateApi =
 
       return result as TMethod extends 'GET'
         ? UseQueryResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
-        : UseMutationResult<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto, TArgs['dynamicRequestData']>
+        : UseMutationResult<
+            FinalResponseData<TApplyDefaultDto, TArgs>,
+            RegisterErrorDto,
+            {
+              requestData: TArgs['dynamicRequestData']
+              queryParams: TArgs['dynamicQueryParams']
+              urlParams: TArgs['endPointArgs']
+            }
+          >
     }
     useCustomHook.getQueryKey = (args: QueryKeyType<TArgs>) =>
       getFinalName(name, args.queryParams, args.urlParams).map(String).filter(Boolean)

@@ -1,28 +1,19 @@
-import React, { FunctionComponent, useEffect } from 'react'
-import { useGetPost } from './api/post'
+import { FunctionComponent, useState } from 'react'
+import { AComponent } from './components/AComponent'
+import { BComponents } from './components/BComponents'
+import { CComponent } from './components/CComponent'
 
 interface AppPropsType {}
 
 export const App: FunctionComponent<AppPropsType> = () => {
-  const { data, isLoading } = useGetPost({
-    queryParams: {
-      ss: 0,
-      name: '',
-    },
-    urlParams: {
-      postId: 1,
-    },
-  })
-
-  useEffect(() => {
-    if (isLoading) return
-    console.log(123, data)
-  }, [data, isLoading])
-
-  if (isLoading) return <div>Loading ...</div>
+  const [showB, setShowB] = useState(false)
   return (
     <div>
-      <h1>Hello React Courier</h1>
+      <h1>Parent</h1>
+      <button onClick={() => setShowB(!showB)}>Toggle B</button>
+      <AComponent />
+      {showB ? <BComponents /> : null}
+      <CComponent />
     </div>
   )
 }

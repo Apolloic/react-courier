@@ -5,7 +5,7 @@ export const tsup: Options = {
   clean: true, // clean up the dist folder
   dts: true, // generate dts files
   treeshake: true,
-  format: ['cjs', 'esm'], // generate cjs and esm files
+  format: ['esm'], // generate esm files
   minify: true,
   bundle: true,
   skipNodeModulesBundle: true,

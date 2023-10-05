@@ -149,34 +149,52 @@ export type CourierObjectType<
     headers?: Record<any, any>
     axiosAgentConfig?: axiosAgentConfigType
   }
-  name:
-    | ((
-        args: TArgs['endPointArgs'] & TArgs['dynamicQueryParams'] & TArgs['staticQueryParams'],
-      ) => (string | number | boolean)[])
-    | string[]
+  name: TMethod extends 'GET'
+    ?
+        | ((
+            args: TArgs['endPointArgs'] & TArgs['dynamicQueryParams'] & TArgs['staticQueryParams'],
+          ) => (string | number | boolean)[])
+        | string[]
+    : string[]
+
   baseUrl?: keyof RegisterOtherBaseUrls | 'default'
   endPoint: TArgs['endPointArgs'] extends Record<any, any> ? EndPointFunction<TArgs['endPointArgs']> : string
 } & CourierObjectTypeQueryParams<TArgs> &
   CourierObjectTypeRequestData<TMethod, TArgs['staticRequestData']> &
   CourierObjectTypeDTO<TApplyDefaultDto, TArgs>
 
-export type HookArgs<
-  TMethod extends MethodTypes,
-  TApplyDefaultDto extends boolean,
-  TArgs extends CreateCourierEntranceType,
-> = {
+export type GetHookArgsWithQueryParams<TApplyDefaultDto extends boolean, TArgs extends CreateCourierEntranceType> = {
+  queryParams: TArgs['dynamicQueryParams']
   headers?: Record<string, string>
   urlParams?: TArgs['endPointArgs'] extends Record<any, any>
     ? Record<keyof TArgs['endPointArgs'], string | number>
     : unknown
-  options?: TMethod extends 'GET'
-    ? UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
-    : UseMutationOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
-} & (TArgs['dynamicQueryParams'] extends Record<any, any>
-  ? { queryParams: TArgs['dynamicQueryParams'] }
-  : { queryParams?: unknown })
-// Providers
+  options?: UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
+}
 
+export type GetHookArgsWithoutQueryParams<TApplyDefaultDto extends boolean, TArgs extends CreateCourierEntranceType> = {
+  queryParams?: unknown
+  headers?: Record<string, string>
+  urlParams?: TArgs['endPointArgs'] extends Record<any, any>
+    ? Record<keyof TArgs['endPointArgs'], string | number>
+    : unknown
+  options?: UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
+}
+
+export type HookArgs<
+  TMethod extends MethodTypes,
+  TApplyDefaultDto extends boolean,
+  TArgs extends CreateCourierEntranceType,
+> = TMethod extends 'GET'
+  ? TArgs['dynamicQueryParams'] extends Record<any, any>
+    ? GetHookArgsWithQueryParams<TApplyDefaultDto, TArgs>
+    : GetHookArgsWithoutQueryParams<TApplyDefaultDto, TArgs>
+  : {
+      headers?: Record<string, string>
+      options?: UseMutationOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
+    }
+
+// Providers
 export type MiddelwareType = (data: AxiosResponse<any, any>) => void
 
 export interface CourierProviderPropsType extends PropsWithChildren {
@@ -202,6 +220,6 @@ export type ContextType = {
 }
 
 export type QueryKeyType<T extends CreateCourierEntranceType> = {
-  queryParams: T['dynamicQueryParams']
-  urlParams: T['endPointArgs']
+  queryParams?: T['dynamicQueryParams']
+  urlParams?: T['endPointArgs']
 }
