@@ -10,7 +10,7 @@ export interface CreateCourierEntranceType {
   staticRequestData?: Record<any, any>
   staticQueryParams?: Record<any, any>
   dynamicQueryParams?: Record<any, any>
-  endPointArgs?: Record<any, any>
+  urlParams?: Record<any, any>
 }
 
 // Utils STart
@@ -152,13 +152,13 @@ export type CourierObjectType<
   name: TMethod extends 'GET'
     ?
         | ((
-            args: TArgs['endPointArgs'] & TArgs['dynamicQueryParams'] & TArgs['staticQueryParams'],
+            args: TArgs['urlParams'] & TArgs['dynamicQueryParams'] & TArgs['staticQueryParams'],
           ) => (string | number | boolean)[])
         | string[]
     : string[]
 
   baseUrl?: keyof RegisterOtherBaseUrls | 'default'
-  endPoint: TArgs['endPointArgs'] extends Record<any, any> ? EndPointFunction<TArgs['endPointArgs']> : string
+  endPoint: TArgs['urlParams'] extends Record<any, any> ? EndPointFunction<TArgs['urlParams']> : string
 } & CourierObjectTypeQueryParams<TArgs> &
   CourierObjectTypeRequestData<TMethod, TArgs['staticRequestData']> &
   CourierObjectTypeDTO<TApplyDefaultDto, TArgs>
@@ -166,18 +166,14 @@ export type CourierObjectType<
 export type GetHookArgsWithQueryParams<TApplyDefaultDto extends boolean, TArgs extends CreateCourierEntranceType> = {
   queryParams: TArgs['dynamicQueryParams']
   headers?: Record<string, string>
-  urlParams?: TArgs['endPointArgs'] extends Record<any, any>
-    ? Record<keyof TArgs['endPointArgs'], string | number>
-    : unknown
+  urlParams?: TArgs['urlParams'] extends Record<any, any> ? Record<keyof TArgs['urlParams'], string | number> : unknown
   options?: UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
 }
 
 export type GetHookArgsWithoutQueryParams<TApplyDefaultDto extends boolean, TArgs extends CreateCourierEntranceType> = {
   queryParams?: unknown
   headers?: Record<string, string>
-  urlParams?: TArgs['endPointArgs'] extends Record<any, any>
-    ? Record<keyof TArgs['endPointArgs'], string | number>
-    : unknown
+  urlParams?: TArgs['urlParams'] extends Record<any, any> ? Record<keyof TArgs['urlParams'], string | number> : unknown
   options?: UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
 }
 
@@ -221,5 +217,5 @@ export type ContextType = {
 
 export type QueryKeyType<T extends CreateCourierEntranceType> = {
   queryParams?: T['dynamicQueryParams']
-  urlParams?: T['endPointArgs']
+  urlParams?: T['urlParams']
 }

@@ -81,7 +81,7 @@ export const CreateApi =
           async (mutateData: {
             requestData: TArgs['dynamicRequestData']
             queryParams: TArgs['dynamicQueryParams']
-            urlParams: TArgs['endPointArgs']
+            urlParams: TArgs['urlParams']
           }) => {
             finalEndPoint = getFinalEndPoint(endPoint, mutateData.urlParams)
             finalAxiosConfigs = {
@@ -143,7 +143,7 @@ export const CreateApi =
             {
               requestData: TArgs['dynamicRequestData']
               queryParams: TArgs['dynamicQueryParams']
-              urlParams: TArgs['endPointArgs']
+              urlParams: TArgs['urlParams']
             }
           >
     }

@@ -19,7 +19,7 @@ export const useGetPost = CreateApi<UseGetPostApiType>()({
 })
 
 type AddPostApiType = {
-  endPointArgs: {
+  urlParams: {
     id: number
   }
   dynamicQueryParams: {
