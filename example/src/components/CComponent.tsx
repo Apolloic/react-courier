@@ -4,22 +4,17 @@ import React, { FunctionComponent } from 'react'
 interface CComponentPropsType {}
 
 export const CComponent: FunctionComponent<CComponentPropsType> = () => {
-  const { mutate } = useAddPost()
+  const { data } = useAddPost({
+    queryParams: {
+      name: 'Ashghar',
+    },
+    urlParams: {
+      name: 'ali',
+    },
+  })
 
   const onRequestHandler = (id: number) => {
-    mutate({
-      requestData: {
-        body: 'salam',
-      },
-      queryParams: {
-        id: id,
-        name: 'erfan',
-        age: 555,
-      },
-      urlParams: {
-        id: id,
-      },
-    })
+    console.log(data)
   }
 
   return (

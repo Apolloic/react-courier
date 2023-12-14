@@ -19,20 +19,20 @@ export const useGetPost = CreateApi<UseGetPostApiType>()({
 })
 
 type AddPostApiType = {
-  urlParams: {
-    id: number
-  }
   dynamicQueryParams: {
-    id: number
-    name: string
-    age: number
+    name: 'Jalal' | 'Ashghar'
   }
   dynamicRequestData: {
     body: string
   }
+  urlParams: {
+    name: 'erfan' | 'ali'
+  }
 }
 export const useAddPost = CreateApi<AddPostApiType>()({
-  endPoint: ({ id }) => `/post/${id}`,
-  method: 'DELETE',
+  endPoint: ({ name }) => {
+    return `/post/${name}`
+  },
+  method: 'GET',
   name: ['salam_chetori'],
 })
