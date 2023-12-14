@@ -9,7 +9,7 @@ export const CComponent: FunctionComponent<CComponentPropsType> = () => {
       name: 'Ashghar',
     },
     urlParams: {
-      name: 'ali',
+      name: 'erfan',
     },
   })
 

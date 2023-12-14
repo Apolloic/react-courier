@@ -173,7 +173,7 @@ export type GetHookArgsWithQueryParams<TApplyDefaultDto extends boolean, TArgs e
 export type GetHookArgsWithoutQueryParams<TApplyDefaultDto extends boolean, TArgs extends CreateCourierEntranceType> = {
   queryParams?: unknown
   headers?: Record<string, string>
-  urlParams?: TArgs['urlParams'] extends Record<any, any> ? Record<keyof TArgs['urlParams'], string | number> : unknown
+  urlParams?: TArgs['urlParams'] extends Record<any, any> ? TArgs['urlParams'] : unknown
   options?: UseQueryOptions<FinalResponseData<TApplyDefaultDto, TArgs>, RegisterErrorDto>
 }
 
