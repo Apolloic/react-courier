@@ -1,18 +1,16 @@
-import lodash from 'lodash'
 import { DTONested } from '../types'
+import camelCase from "camelcase"
 
-export function getFinalEndPoint<TUrlParams, TEndPoint>(endPoint: TEndPoint, urlParams?: TUrlParams): string {
-  return urlParams
-    ? lodash.isFunction(endPoint)
-      ? endPoint(urlParams)
-      : endPoint
-    : lodash.isFunction(endPoint)
-    ? endPoint()
-    : endPoint
+export function getFinalEndPoint<TUrlParams, TEndPoint extends CallableFunction | string>(endPoint: TEndPoint, urlParams?: TUrlParams): string {
+  if (typeof endPoint === "function") {
+    return endPoint(urlParams)
+  }
+
+  return endPoint
 }
 
 export const getFinalName = <TName, TQP, TUP>(name: TName, queryParams: TQP, urlParams: TUP) => {
-  if (lodash.isFunction(name)) {
+  if (typeof name === "function") {
     return name({
       ...queryParams,
       ...urlParams,
@@ -25,32 +23,31 @@ export const getFinalName = <TName, TQP, TUP>(name: TName, queryParams: TQP, url
 export const getFinalQueryParams = <TSQP, TDQP>(staticQueryParams: TSQP, queryParamsFromHook: TDQP) => {
   if (queryParamsFromHook) {
     if (staticQueryParams) {
-      if (lodash.isFunction(staticQueryParams)) {
-        return { ...queryParamsFromHook, ...staticQueryParams(queryParamsFromHook) }
-      } else {
-        return { ...queryParamsFromHook, ...staticQueryParams }
+      return {
+        ...queryParamsFromHook,
+        ...(typeof staticQueryParams === "function"
+          ? staticQueryParams(queryParamsFromHook)
+          : staticQueryParams)
       }
     } else {
       return queryParamsFromHook
     }
   } else {
-    if (staticQueryParams) {
-      return staticQueryParams
-    } else {
-      return {}
-    }
+    return staticQueryParams || {}
   }
 }
 
 export const defaultDto = <Data>(data: Data): DTONested<Data> => {
-  if (lodash.isArray(data)) {
-    return lodash.map(data, defaultDto) as DTONested<Data>
+  if (Array.isArray(data)) {
+    return data.map((entry) => defaultDto(entry)) as DTONested<Data>
   }
 
-  if (lodash.isObject(data)) {
-    const newObjKeys = lodash.mapKeys(data, (_value, key) => lodash.camelCase(key))
-    const newObjValues = lodash.mapValues(newObjKeys, (value) => defaultDto(value))
-    return newObjValues as DTONested<Data>
+  if (data && typeof data === "object") {
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) =>
+        [camelCase(key), defaultDto(value)]
+      )
+    ) as DTONested<Data>
   }
 
   return data as DTONested<Data>
