@@ -10,6 +10,7 @@ function CourierContextProvider({
   defaultOptions,
   children,
   middleware,
+  dehydratedState,
 }: CourierProviderPropsType) {
   const queryClient = useQueryClient()
 
@@ -33,6 +34,7 @@ function CourierContextProvider({
       timeout: defaultOptions?.timeout,
       middleware,
       commonErrorDto: defaultOptions?.errorDto,
+      dehydratedState,
     }),
     [defaultBaseUrl, otherBaseUrl, defaultOptions, middleware],
   )

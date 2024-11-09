@@ -1,5 +1,5 @@
 import { useGetPost } from '@/api/post'
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 
 interface AComponentPropsType {}
 
@@ -21,6 +21,7 @@ export const AComponent: FunctionComponent<AComponentPropsType> = () => {
   return (
     <div>
       <h1>A Component</h1>
+      {data?.bodyAdmin}
     </div>
   )
 }

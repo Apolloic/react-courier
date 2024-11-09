@@ -13,7 +13,7 @@ export interface CreateCourierEntranceType {
   urlParams?: Record<any, any>
 }
 
-// Utils STart
+// Utils Start
 export type DTO<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<DTO<U>>}` : S
 
 export type DTONested<T> = T extends Array<any>
@@ -100,7 +100,7 @@ export type FinalOptionType<
 
 // ========================= End Options ===================================
 
-// Strat Final ===============
+// Start Final ===============
 
 type FinalStaticOrDynamic<S, D> = D extends Record<any, any>
   ? S extends Record<any, any>
@@ -197,6 +197,7 @@ export interface CourierProviderPropsType extends PropsWithChildren {
   defaultBaseUrl: string
   middleware?: MiddelwareType
   otherBaseUrl?: Record<keyof RegisterOtherBaseUrls, string>
+  dehydratedState?: unknown
   defaultOptions?: DefaultOptions<RegisterErrorDto> & {
     timeout?: number
     headers?: Record<string, string>
