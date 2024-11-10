@@ -1,5 +1,5 @@
-import { useGetPost } from '@/api/post'
 import React, { FunctionComponent } from 'react'
+import { useGetPost } from '../api/post'
 
 interface BComponentsPropsType {}
 
@@ -17,7 +17,6 @@ export const BComponents: FunctionComponent<BComponentsPropsType> = () => {
       refetchOnWindowFocus: false,
     },
   })
-  console.log(66666, data)
   if (isLoading) return <div>Loading ...</div>
   return (
     <div>

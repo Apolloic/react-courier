@@ -1,5 +1,5 @@
-import { useAddPost } from '@/api/post'
 import React, { FunctionComponent } from 'react'
+import { useAddPost } from '../api/post'
 
 interface CComponentPropsType {}
 

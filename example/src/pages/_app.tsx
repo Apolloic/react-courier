@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react'
-import { AComponent } from './components/AComponent'
-import { BComponents } from './components/BComponents'
-import { CComponent } from './components/CComponent'
+import { AComponent } from '../components/AComponent'
+import { BComponents } from '../components/BComponents'
+import { CComponent } from '../components/CComponent'
 
 interface AppPropsType {}
 

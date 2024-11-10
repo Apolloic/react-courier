@@ -1,5 +1,5 @@
-import { useGetPost } from '@/api/post'
 import { FunctionComponent } from 'react'
+import { useGetPost } from '../api/post'
 
 interface AComponentPropsType {}
 
