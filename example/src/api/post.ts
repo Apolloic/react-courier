@@ -1,3 +1,5 @@
+import { CreateApi } from 'react-courier'
+
 type UseGetPostApiType = {
   responseData: {
     body_admin: string
